@@ -1,0 +1,244 @@
+﻿
+@{
+    ViewBag.Title = "Raporlama";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/Chart.min.css" rel="stylesheet" />
+<script src="~/Scripts/Chart.min.js"></script>
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/Home/Index">Ana Sayfa</a></li>
+                    <li class="breadcrumb-item active">Raporlama</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content" ng-app="app">
+    <div class="container-fluid" ng-controller="reportCtrl" ng-init="fetchData()">
+        <div class="row">
+            <section class="col-lg-12 connectedSortable">
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <center><h4 class="card-title">Rapor</h4></center>
+                        <div class="card-tools">
+                            <!-- Collapse Button -->
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+
+                        <div class="table-responsive" style="width:auto">
+
+                            <table table class="table table-hover table-bordered table-head-fixed text-wrap">
+                                <thead>
+                                    <tr>
+                                        <th>Sebep/Ay</th>
+                                        <th scope="col" ng-repeat="colItem in columnList" style="background: #c3d8ef">{{colItem.colName}}-{{colItem.year}}</th>
+                                        <th scope="col"> Genel Toplam</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="lineItem in lineList">
+                                        <th scope="row" style="background: #c3d8ef" ng-if="lineItem.actionReason=='-'">Sebep Girilmemiş</th>
+                                        <th scope="row" style="background: #c3d8ef" ng-if="lineItem.actionReason!='-'">{{lineItem.actionReason}}</th>
+                                        <td ng-repeat="j in lineItem.detail" style="background: #DCE6F1">
+                                            <p ng-if="j.sumAmount<0" style="color:red; text-align:right">
+                                                {{j.sumAmount}}
+                                            </p>
+                                            <p ng-if="j.sumAmount>=0" style="text-align: right">
+                                                {{j.sumAmount}}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p ng-if="lineItem.sumAmount<0" style="color: red; text-align: right">
+                                                {{lineItem.sumAmount}}
+                                            </p>
+                                            <p ng-if="lineItem.sumAmount>=0" style="text-align: right">
+                                                {{lineItem.sumAmount}}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Genel Toplam</th>
+                                        <td ng-repeat="item in columnList">
+                                            <p ng-if="item.sumAmount<0" style="color: red; text-align: right">
+                                                {{item.sumAmount}}
+                                            </p>
+                                            <p ng-if="item.sumAmount>=0" style="text-align: right">
+                                                {{item.sumAmount}}
+                                            </p>
+                                        </td>
+                                        <td ng-if="total[0].sumAmount>=0" style="text-align: right">
+                                            {{total[0].sumAmount}}
+                                        </td>
+                                        <td ng-if="total[0].sumAmount<0" style="color: red; text-align: right">
+                                            {{total[0].sumAmount}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+
+                    </div>
+                    <div class="overlay dark" ng-if="!uploading">
+                        <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="row">
+            <section class="col-lg-12 connectedSortable">
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <center><h4 class="card-title">Detaylı Rapor Grafiği</h4></center>
+                        <div class="card-tools">
+                            <!-- Collapse Button -->
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="reportChart"></canvas>
+
+                        </div>
+                        <a href="#" id="downloadPdf" ng-click="Save()">Download Report Page as PDF</a>
+
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+
+                    </div>
+
+                </div>
+
+            </section>
+        </div>
+        <div class="row">
+            <section class="col-lg-6 connectedSortable">
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <center><h4 class="card-title">Ay Bazlı Toplam Maliyet </h4></center>
+                        <div class="card-tools">
+                            <!-- Collapse Button -->
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="monthBarChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="col-lg-6 connectedSortable">
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <center><h4 class="card-title">Sebep Bazlı Toplam Maliyet </h4></center>
+                        <div class="card-tools">
+                            <!-- Collapse Button -->
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="reasonBarChart"></canvas>
+
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="row">
+            <section class="col-lg-6 connectedSortable">
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <center><h4 class="card-title">Ay Bazlı Toplam Maliyet </h4></center>
+                        <div class="card-tools">
+                            <!-- Collapse Button -->
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="monthPieChart"></canvas>
+
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="col-lg-6 connectedSortable">
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <center><h4 class="card-title">Sebep Bazlı Toplam Maliyet </h4></center>
+                        <div class="card-tools">
+                            <!-- Collapse Button -->
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="reasonPieChart"></canvas>
+
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div><!-- /.container-fluid -->
+
+</section>
+<style>
+    .table td, .table th {
+        padding: 0.3rem;
+        vertical-align: center;
+        border-top: 1px solid #DCE6F1;
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 0rem;
+    }
+
+    .table-bordered td, .table-bordered th {
+        border: 1px solid #ececec
+    }
+</style>

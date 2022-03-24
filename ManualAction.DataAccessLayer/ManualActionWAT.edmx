@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ManualActionsDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ActionHistory">
+          <Key>
+            <PropertyRef Name="historyID" />
+          </Key>
+          <Property Name="historyID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="manualActionID" Type="text" Nullable="false" />
+          <Property Name="senderUser" Type="text" Nullable="false" />
+          <Property Name="senderTeam" Type="text" Nullable="false" />
+          <Property Name="receiverUser" Type="text" Nullable="false" />
+          <Property Name="receiverTeam" Type="text" Nullable="false" />
+          <Property Name="redirectedText" Type="text" />
+          <Property Name="redirectedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ManualActionsDB.dbo.Department' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="departmentType" />
+            <PropertyRef Name="departmentName" />
+          </Key>
+          <Property Name="departmentType" Type="int" Nullable="false" />
+          <Property Name="departmentName" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ManualAction">
+          <Key>
+            <PropertyRef Name="manualActionID" />
+          </Key>
+          <Property Name="manualActionID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UY" Type="text" />
+          <Property Name="HTU" Type="text" />
+          <Property Name="material" Type="text" />
+          <Property Name="materialText" Type="text" />
+          <Property Name="MT" Type="text" />
+          <Property Name="amount" Type="text" />
+          <Property Name="brm" Type="text" />
+          <Property Name="priceBrm" Type="text" />
+          <Property Name="total" Type="text" />
+          <Property Name="DnmsMF" Type="text" />
+          <Property Name="DnmsMFValue" Type="decimal" Precision="12" Scale="4" />
+          <Property Name="orderValue" Type="text" />
+          <Property Name="productCode" Type="text" />
+          <Property Name="productCodeInfo" Type="text" />
+          <Property Name="productYear" Type="text" />
+          <Property Name="registerDate" Type="date" />
+          <Property Name="loginDate" Type="date" />
+          <Property Name="loginDateTime" Type="text" />
+          <Property Name="userRegisterNo" Type="text" />
+          <Property Name="username" Type="text" />
+          <Property Name="actionReason" Type="text" />
+          <Property Name="reasonDetail" Type="text" />
+          <Property Name="madeDate" Type="datetime" />
+          <Property Name="statusType" Type="int" />
+          <Property Name="statusName" Type="text" />
+          <Property Name="isRedirected" Type="bit" />
+          <Property Name="historyID" Type="text" />
+          <Property Name="redirectedTeam" Type="text" />
+          <Property Name="redirectedUser" Type="text" />
+          <Property Name="redirectedText" Type="text" />
+          <Property Name="redirectedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ManualActionReason">
+          <Key>
+            <PropertyRef Name="reasonID" />
+          </Key>
+          <Property Name="reasonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="reasonName" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="statusType" />
+          </Key>
+          <Property Name="statusType" Type="int" Nullable="false" />
+          <Property Name="statusName" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ManualActionsDB.dbo.UserList' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UserList">
+          <Key>
+            <PropertyRef Name="registerNo" />
+            <PropertyRef Name="userType" />
+            <PropertyRef Name="username" />
+            <PropertyRef Name="password" />
+            <PropertyRef Name="departmantType" />
+          </Key>
+          <Property Name="registerNo" Type="text" Nullable="false" />
+          <Property Name="userType" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="username" Type="text" Nullable="false" />
+          <Property Name="password" Type="text" Nullable="false" />
+          <Property Name="departmantType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ManualActionsDBModelStoreContainer">
+          <EntitySet Name="ActionHistory" EntityType="Self.ActionHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ManualAction" EntityType="Self.ManualAction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ManualActionReason" EntityType="Self.ManualActionReason" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Department" EntityType="Self.Department" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Department].[departmentType] AS [departmentType], 
+    [Department].[departmentName] AS [departmentName]
+    FROM [dbo].[Department] AS [Department]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserList" EntityType="Self.UserList" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UserList].[registerNo] AS [registerNo], 
+    [UserList].[userType] AS [userType], 
+    [UserList].[username] AS [username], 
+    [UserList].[password] AS [password], 
+    [UserList].[departmantType] AS [departmantType]
+    FROM [dbo].[UserList] AS [UserList]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ManualActionsDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ActionHistory">
+          <Key>
+            <PropertyRef Name="historyID" />
+          </Key>
+          <Property Name="historyID" Type="Guid" Nullable="false" />
+          <Property Name="manualActionID" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="senderUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="senderTeam" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="receiverUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="receiverTeam" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="redirectedText" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="redirectedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="ManualActionReason">
+          <Key>
+            <PropertyRef Name="reasonID" />
+          </Key>
+          <Property Name="reasonID" Type="Guid" Nullable="false" />
+          <Property Name="reasonName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="departmentType" />
+            <PropertyRef Name="departmentName" />
+          </Key>
+          <Property Name="departmentType" Type="Int32" Nullable="false" />
+          <Property Name="departmentName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ManualActionsDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ActionHistory" EntityType="Self.ActionHistory" />
+          <EntitySet Name="ManualActionReason" EntityType="Self.ManualActionReason" />
+          <EntitySet Name="Department" EntityType="Self.Department" />
+          <EntitySet Name="Status" EntityType="ManualActionsDBModel.Status" />
+          <EntitySet Name="UserList" EntityType="ManualActionsDBModel.UserList" />
+          <EntitySet Name="ManualAction" EntityType="ManualActionsDBModel.ManualAction" />
+        </EntityContainer>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="statusType" />
+          </Key>
+          <Property Name="statusType" Type="Int32" Nullable="false" />
+          <Property Name="statusName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="UserList">
+          <Key>
+            <PropertyRef Name="registerNo" />
+            <PropertyRef Name="userType" />
+            <PropertyRef Name="username" />
+            <PropertyRef Name="password" />
+            <PropertyRef Name="departmantType" />
+          </Key>
+          <Property Name="registerNo" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="userType" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="username" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="departmantType" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ManualAction">
+          <Key>
+            <PropertyRef Name="manualActionID" />
+          </Key>
+          <Property Name="manualActionID" Type="Guid" Nullable="false" />
+          <Property Name="UY" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="HTU" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="material" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="materialText" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="MT" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="amount" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="brm" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="priceBrm" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="total" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DnmsMF" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DnmsMFValue" Type="Decimal" Precision="12" Scale="4" />
+          <Property Name="orderValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="productCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="productCodeInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="productYear" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="registerDate" Type="DateTime" Precision="0" />
+          <Property Name="loginDate" Type="DateTime" Precision="0" />
+          <Property Name="loginDateTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="userRegisterNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="username" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="actionReason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="reasonDetail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="madeDate" Type="DateTime" Precision="3" />
+          <Property Name="statusType" Type="Int32" />
+          <Property Name="statusName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="isRedirected" Type="Boolean" />
+          <Property Name="historyID" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="redirectedTeam" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="redirectedUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="redirectedText" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="redirectedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ManualActionsDBModelStoreContainer" CdmEntityContainer="ManualActionsDBEntities">
+          <EntitySetMapping Name="ActionHistory">
+            <EntityTypeMapping TypeName="ManualActionsDBModel.ActionHistory">
+              <MappingFragment StoreEntitySet="ActionHistory">
+                <ScalarProperty Name="historyID" ColumnName="historyID" />
+                <ScalarProperty Name="manualActionID" ColumnName="manualActionID" />
+                <ScalarProperty Name="senderUser" ColumnName="senderUser" />
+                <ScalarProperty Name="senderTeam" ColumnName="senderTeam" />
+                <ScalarProperty Name="receiverUser" ColumnName="receiverUser" />
+                <ScalarProperty Name="receiverTeam" ColumnName="receiverTeam" />
+                <ScalarProperty Name="redirectedText" ColumnName="redirectedText" />
+                <ScalarProperty Name="redirectedDate" ColumnName="redirectedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ManualActionReason">
+            <EntityTypeMapping TypeName="ManualActionsDBModel.ManualActionReason">
+              <MappingFragment StoreEntitySet="ManualActionReason">
+                <ScalarProperty Name="reasonID" ColumnName="reasonID" />
+                <ScalarProperty Name="reasonName" ColumnName="reasonName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Department">
+            <EntityTypeMapping TypeName="ManualActionsDBModel.Department">
+              <MappingFragment StoreEntitySet="Department">
+                <ScalarProperty Name="departmentType" ColumnName="departmentType" />
+                <ScalarProperty Name="departmentName" ColumnName="departmentName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="ManualActionsDBModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="statusName" ColumnName="statusName" />
+                <ScalarProperty Name="statusType" ColumnName="statusType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserList">
+            <EntityTypeMapping TypeName="ManualActionsDBModel.UserList">
+              <MappingFragment StoreEntitySet="UserList">
+                <ScalarProperty Name="departmantType" ColumnName="departmantType" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="userType" ColumnName="userType" />
+                <ScalarProperty Name="registerNo" ColumnName="registerNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ManualAction">
+            <EntityTypeMapping TypeName="ManualActionsDBModel.ManualAction">
+              <MappingFragment StoreEntitySet="ManualAction">
+                <ScalarProperty Name="redirectedDate" ColumnName="redirectedDate" />
+                <ScalarProperty Name="redirectedText" ColumnName="redirectedText" />
+                <ScalarProperty Name="redirectedUser" ColumnName="redirectedUser" />
+                <ScalarProperty Name="redirectedTeam" ColumnName="redirectedTeam" />
+                <ScalarProperty Name="historyID" ColumnName="historyID" />
+                <ScalarProperty Name="isRedirected" ColumnName="isRedirected" />
+                <ScalarProperty Name="statusName" ColumnName="statusName" />
+                <ScalarProperty Name="statusType" ColumnName="statusType" />
+                <ScalarProperty Name="madeDate" ColumnName="madeDate" />
+                <ScalarProperty Name="reasonDetail" ColumnName="reasonDetail" />
+                <ScalarProperty Name="actionReason" ColumnName="actionReason" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="userRegisterNo" ColumnName="userRegisterNo" />
+                <ScalarProperty Name="loginDateTime" ColumnName="loginDateTime" />
+                <ScalarProperty Name="loginDate" ColumnName="loginDate" />
+                <ScalarProperty Name="registerDate" ColumnName="registerDate" />
+                <ScalarProperty Name="productYear" ColumnName="productYear" />
+                <ScalarProperty Name="productCodeInfo" ColumnName="productCodeInfo" />
+                <ScalarProperty Name="productCode" ColumnName="productCode" />
+                <ScalarProperty Name="orderValue" ColumnName="orderValue" />
+                <ScalarProperty Name="DnmsMFValue" ColumnName="DnmsMFValue" />
+                <ScalarProperty Name="DnmsMF" ColumnName="DnmsMF" />
+                <ScalarProperty Name="total" ColumnName="total" />
+                <ScalarProperty Name="priceBrm" ColumnName="priceBrm" />
+                <ScalarProperty Name="brm" ColumnName="brm" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="MT" ColumnName="MT" />
+                <ScalarProperty Name="materialText" ColumnName="materialText" />
+                <ScalarProperty Name="material" ColumnName="material" />
+                <ScalarProperty Name="HTU" ColumnName="HTU" />
+                <ScalarProperty Name="UY" ColumnName="UY" />
+                <ScalarProperty Name="manualActionID" ColumnName="manualActionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

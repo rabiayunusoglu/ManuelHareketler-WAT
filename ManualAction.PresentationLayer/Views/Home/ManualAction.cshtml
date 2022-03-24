@@ -1,0 +1,1236 @@
+﻿
+@{
+    ViewBag.Title = "Manuel Hareketler";
+}
+
+
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h4>Manuel Hareketler</h4>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/Home/Index">Ana Sayfa</a></li>
+                    <li class="breadcrumb-item active">Manuel Hareketler</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<div class="content">
+    <div class="container-fluid" ng-app="app">
+        <section class="content" ng-controller="manualActionCtrl" ng-init="fetchData()">
+            <div class="col-12">
+                <div class="card card-dark card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="tab1l" data-toggle="pill" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Total</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab2l" data-toggle="pill" href="#tab2" role="tab" aria-controls="tab2">Başlanmayan</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab3l" data-toggle="pill" href="#tab3" role="tab" aria-controls="tab3">Devam Eden</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab4l" data-toggle="pill" href="#tab4" role="tab" aria-controls="tab4">Tamamlanan</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1l">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="float-left">
+                                            <div class="input-group">
+                                                <label class="input">
+                                                    Başlangıç:
+                                                    <input id="data-startDate" type="date" class="form-control" name="name" ng-value="startDate" />
+                                                </label>
+                                                <label class="input">
+                                                    Bitiş:
+                                                    <input id="data-endDate" type="date" class="form-control" name="name" ng-value="endDate" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="float-right" style="padding-top:20px;">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+
+                                                <label class="btn btn-dark " ng-click="fetchData()">
+                                                    <input type="radio" name="options" id="option_a4"> Tümünü Getir
+                                                </label>
+                                                <label class="btn btn-success " ng-click="Export()">
+                                                    <input type="radio" name="options" id="option_a3"> Excel Aktar
+                                                </label>
+                                                <label class="btn btn-info " ng-click="fetchDataByDate()">
+                                                    <input type="radio" name="options" id="option_a1"> Getir
+                                                </label>
+                                                <label class="btn btn-success " ng-click="ExportByDate()">
+                                                    <input type="radio" name="options" id="option_a2"> Excel Aktar
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                        
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="float-lg-left">
+                                            <div class="input-group mb-4">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" ng-model="searchText" style="font-weight: normal" placeholder="Ara..." />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="float-lg-right">
+                                            Sayfa
+                                            <label>
+                                                <select class="form-control" ng-model="itemsPerPage" style="font-weight: normal">
+                                                    <option ng-value="2">2</option>
+                                                    <option ng-value="5">5</option>
+                                                    <option ng-value="10">10</option>
+                                                    <option ng-value="25">25</option>
+                                                    <option ng-value="50">50</option>
+                                                </select>
+                                            </label>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-head-fixed text-wrap ">
+                                        <thead>
+                                            <tr>
+                                                <th ng-click="sortBy('id')">
+                                                    Sıra No
+                                                    <span class="glyphicon" ng-show="sortColumn=='id'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('statusName')">
+                                                    Durum
+                                                    <span class="glyphicon" ng-show="sortColumn=='statusName'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('userRegisterNo')">
+                                                    Sicil
+                                                    <span class="glyphicon" ng-show="sortColumn=='userRegisterNo'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('username')">
+                                                    İsim
+                                                    <span class="glyphicon" ng-show="sortColumn=='username'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+
+                                                <th ng-click="sortBy('UY')">
+                                                    ÜY
+                                                    <span class="glyphicon" ng-show="sortColumn=='UY'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('HTU')">
+                                                    HTü
+                                                    <span class="glyphicon" ng-show="sortColumn=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('material')">
+                                                    Malzeme
+                                                    <span class="glyphicon" ng-show="sortColumn=='material'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('HTU')">
+                                                    Malzeme Metni
+                                                    <span class="glyphicon" ng-show="sortColumn=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('MT')">
+                                                    MT
+                                                    <span class="glyphicon" ng-show="sortColumn=='MT'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('amount')">
+                                                    Miktar
+                                                    <span class="glyphicon" ng-show="sortColumn=='amount'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('brm')">
+                                                    Birim
+                                                    <span class="glyphicon" ng-show="sortColumn=='brm'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('priceBrm')">
+                                                    Fiyat-Birim
+                                                    <span class="glyphicon" ng-show="sortColumn=='priceBrm'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('total')">
+                                                    Tutar
+                                                    <span class="glyphicon" ng-show="sortColumn=='total'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('DnmsMF')">
+                                                    Dnms.MF
+                                                    <span class="glyphicon" ng-show="sortColumn=='DnmsMF'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('DnmsMFValue')">
+                                                    Dnms.MF Değeri
+                                                    <span class="glyphicon" ng-show="sortColumn=='DnmsMFValue'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('orderValue')">
+                                                    Sipariş
+                                                    <span class="glyphicon" ng-show="sortColumn=='orderValue'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('productCode')">
+                                                    Motor
+                                                    <span class="glyphicon" ng-show="sortColumn=='productCode'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('productCodeInfo')">
+                                                    Motor Bilgisi
+                                                    <span class="glyphicon" ng-show="sortColumn=='productCodeInfo'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('productYear')">
+                                                    Yıl
+                                                    <span class="glyphicon" ng-show="sortColumn=='productYear'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('registerDate')">
+                                                    Kayıt Tarihi
+                                                    <span class="glyphicon" ng-show="sortColumn=='registerDate'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('loginDate')">
+                                                    Giriş Tarihi
+                                                    <span class="glyphicon" ng-show="sortColumn=='loginDate'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('loginDateTime')">
+                                                    Saat
+                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('loginDateTime')">
+                                                    Hareket Sebebi
+                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('loginDateTime')">
+                                                    Açıklama
+                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th>
+                                                    İncele
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="i in manualActionList| orderBy: sortColumn: reverse | limitTo: itemsPerPage: (currentPage - 1) * itemsPerPage  |filter:searchText">
+                                            <tr ng-if="i.statusType==3" style="background: #B4DE86 ">
+                                                <td>
+                                                    {{i.id}}
+                                                </td>
+                                                <td>
+                                                    {{i.statusName}}
+                                                </td>
+                                                <td>
+                                                    {{i.userRegisterNo}}
+                                                </td>
+                                                <td>
+                                                    {{i.username}}
+                                                </td>
+
+                                                <td>
+                                                    {{i.UY}}
+                                                </td>
+                                                <td>
+                                                    {{i.HTU}}
+                                                </td>
+                                                <td>
+                                                    {{i.material}}
+                                                </td>
+                                                <td>
+                                                    {{i.materialText}}
+                                                </td>
+                                                <td>
+                                                    {{i.MT}}
+                                                </td>
+                                                <td>
+                                                    {{i.amount}}
+                                                </td>
+                                                <td>
+                                                    {{i.brm}}
+                                                </td>
+                                                <td>
+                                                    {{i.priceBrm}}
+                                                </td>
+                                                <td>
+                                                    {{i.total}}
+                                                </td>
+                                                <td>
+                                                    {{i.DnmsMF}}
+                                                </td>
+                                                <td>
+                                                    {{i.DnmsMFValue}}
+                                                </td>
+                                                <td>
+                                                    {{i.orderValue}}
+                                                </td>
+                                                <td>
+                                                    {{i.productCode}}
+                                                </td>
+                                                <td>
+                                                    {{i.productCodeInfo}}
+                                                </td>
+                                                <td>
+                                                    {{i.productYear}}
+                                                </td>
+                                                <td>
+                                                    {{i.registerDate}}
+                                                </td>
+                                                <td>
+                                                    {{i.loginDate}}
+                                                </td>
+                                                <td>
+                                                    {{i.loginDateTime}}
+                                                </td>
+                                                <td>
+                                                    {{i.actionReason}}
+                                                </td>
+                                                <td>
+                                                    {{i.reasonDetail}}
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-detail" ng-click="fetchHistory(i.manualActionID,i)">İncele</button>
+                                                </td>
+                                            </tr>
+                                            <tr ng-if="i.statusType==1">
+                                                <td>
+                                                    {{i.id}}
+                                                </td>
+                                                <td>
+                                                    {{i.statusName}}
+                                                </td>
+                                                <td>
+                                                    {{i.userRegisterNo}}
+                                                </td>
+                                                <td>
+                                                    {{i.username}}
+                                                </td>
+
+                                                <td>
+                                                    {{i.UY}}
+                                                </td>
+                                                <td>
+                                                    {{i.HTU}}
+                                                </td>
+                                                <td>
+                                                    {{i.material}}
+                                                </td>
+                                                <td>
+                                                    {{i.materialText}}
+                                                </td>
+                                                <td>
+                                                    {{i.MT}}
+                                                </td>
+                                                <td>
+                                                    {{i.amount}}
+                                                </td>
+                                                <td>
+                                                    {{i.brm}}
+                                                </td>
+                                                <td>
+                                                    {{i.priceBrm}}
+                                                </td>
+                                                <td>
+                                                    {{i.total}}
+                                                </td>
+                                                <td>
+                                                    {{i.DnmsMF}}
+                                                </td>
+                                                <td>
+                                                    {{i.DnmsMFValue}}
+                                                </td>
+                                                <td>
+                                                    {{i.orderValue}}
+                                                </td>
+                                                <td>
+                                                    {{i.productCode}}
+                                                </td>
+                                                <td>
+                                                    {{i.productCodeInfo}}
+                                                </td>
+                                                <td>
+                                                    {{i.productYear}}
+                                                </td>
+                                                <td>
+                                                    {{i.registerDate}}
+                                                </td>
+                                                <td>
+                                                    {{i.loginDate}}
+                                                </td>
+                                                <td>
+                                                    {{i.loginDateTime}}
+                                                </td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>
+                                                </td>
+                                            </tr>
+                                            <tr ng-if="i.statusType==2" style="background: #FFE699 ">
+                                                <td>
+                                                    {{i.id}}
+                                                </td>
+                                                <td>
+                                                    {{i.statusName}}
+                                                </td>
+                                                <td>
+                                                    {{i.userRegisterNo}}
+                                                </td>
+                                                <td>
+                                                    {{i.username}}
+                                                </td>
+
+                                                <td>
+                                                    {{i.UY}}
+                                                </td>
+                                                <td>
+                                                    {{i.HTU}}
+                                                </td>
+                                                <td>
+                                                    {{i.material}}
+                                                </td>
+                                                <td>
+                                                    {{i.materialText}}
+                                                </td>
+                                                <td>
+                                                    {{i.MT}}
+                                                </td>
+                                                <td>
+                                                    {{i.amount}}
+                                                </td>
+                                                <td>
+                                                    {{i.brm}}
+                                                </td>
+                                                <td>
+                                                    {{i.priceBrm}}
+                                                </td>
+                                                <td>
+                                                    {{i.total}}
+                                                </td>
+                                                <td>
+                                                    {{i.DnmsMF}}
+                                                </td>
+                                                <td>
+                                                    {{i.DnmsMFValue}}
+                                                </td>
+                                                <td>
+                                                    {{i.orderValue}}
+                                                </td>
+                                                <td>
+                                                    {{i.productCode}}
+                                                </td>
+                                                <td>
+                                                    {{i.productCodeInfo}}
+                                                </td>
+                                                <td>
+                                                    {{i.productYear}}
+                                                </td>
+                                                <td>
+                                                    {{i.registerDate}}
+                                                </td>
+                                                <td>
+                                                    {{i.loginDate}}
+                                                </td>
+                                                <td>
+                                                    {{i.loginDateTime}}
+                                                </td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-detail" ng-click="fetchHistory(i.manualActionID,i)">İncele</button>
+                                                </td>
+                                            </tr>
+                                            <tr ng-if="!manualActionList || manualActionList.length == 0">
+                                                <td colspan="17" style="text-align:center">
+                                                    <h3>Tablo Boş <i class="fa fa-ban" style="color:red"></i></h3>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                <div class="card-footer clearfix">
+                                    <ul class="pagination pagination-sm m-0 float-right" uib-pagination total-items="manualActionList.length" items-per-page="itemsPerPage" ng-model="currentPage" max-size="5" boundary-links="true" num-pages="numPages">
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2l">
+                                <div class="row">
+                                    <div class="col-lg-2">
+
+                                        <div class="input-group mb-4">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" ng-model="searchText2" style="font-weight: normal" placeholder="Ara..." />
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-lg-10">
+                                        <div class="float-right">
+
+                                            Sayfa
+                                            <label>
+                                                <select class="form-control" ng-model="itemsPerPage2" style="font-weight: normal">
+                                                    <option ng-value="2">2</option>
+                                                    <option ng-value="5">5</option>
+                                                    <option ng-value="10">10</option>
+                                                    <option ng-value="25">25</option>
+                                                    <option ng-value="50">50</option>
+                                                </select>
+                                            </label>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-head-fixed text-wrap ">
+                                        <thead>
+                                            <tr>
+                                                <th ng-click="sortBy2('id')">
+                                                    Sıra No
+                                                    <span class="glyphicon" ng-show="sortColumn2=='id'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('statusName')">
+                                                    Durum
+                                                    <span class="glyphicon" ng-show="sortColumn2=='statusName'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('userRegisterNo')">
+                                                    Sicil
+                                                    <span class="glyphicon" ng-show="sortColumn2=='userRegisterNo'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('username')">
+                                                    İsim
+                                                    <span class="glyphicon" ng-show="sortColumn2=='username'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+
+                                                <th ng-click="sortBy2('UY')">
+                                                    ÜY
+                                                    <span class="glyphicon" ng-show="sortColumn2=='UY'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('HTU')">
+                                                    HTü
+                                                    <span class="glyphicon" ng-show="sortColumn2=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('material')">
+                                                    Malzeme
+                                                    <span class="glyphicon" ng-show="sortColumn2=='material'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('HTU')">
+                                                    Malzeme Metni
+                                                    <span class="glyphicon" ng-show="sortColumn2=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('MT')">
+                                                    MT
+                                                    <span class="glyphicon" ng-show="sortColumn2=='MT'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('amount')">
+                                                    Miktar
+                                                    <span class="glyphicon" ng-show="sortColumn2=='amount'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('brm')">
+                                                    Birim
+                                                    <span class="glyphicon" ng-show="sortColumn2=='brm'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('priceBrm')">
+                                                    Fiyat-Birim
+                                                    <span class="glyphicon" ng-show="sortColumn2=='priceBrm'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('total')">
+                                                    Tutar
+                                                    <span class="glyphicon" ng-show="sortColumn2=='total'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('DnmsMF')">
+                                                    Dnms.MF
+                                                    <span class="glyphicon" ng-show="sortColumn2=='DnmsMF'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('DnmsMFValue')">
+                                                    Dnms.MF Değeri
+                                                    <span class="glyphicon" ng-show="sortColumn2=='DnmsMFValue'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('orderValue')">
+                                                    Sipariş
+                                                    <span class="glyphicon" ng-show="sortColumn2=='orderValue'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('productCode')">
+                                                    Motor
+                                                    <span class="glyphicon" ng-show="sortColumn2=='productCode'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('productCodeInfo')">
+                                                    Motor Bilgisi
+                                                    <span class="glyphicon" ng-show="sortColumn2=='productCodeInfo'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('productYear')">
+                                                    Yıl
+                                                    <span class="glyphicon" ng-show="sortColumn2=='productYear'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('registerDate')">
+                                                    Kayıt Tarihi
+                                                    <span class="glyphicon" ng-show="sortColumn2=='registerDate'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('loginDate')">
+                                                    Giriş Tarihi
+                                                    <span class="glyphicon" ng-show="sortColumn2=='loginDate'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy2('loginDateTime')">
+                                                    Saat
+                                                    <span class="glyphicon" ng-show="sortColumn2=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('loginDateTime')">
+                                                    Hareket Sebebi
+                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('loginDateTime')">
+                                                    Açıklama
+                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="j in noStartedList| orderBy: sortColumn2: reverse2 | limitTo: itemsPerPage2: (currentPage2 - 1) * itemsPerPage2  |filter:searchText2">
+                                            <tr>
+                                                <td>
+                                                    {{j.id}}
+                                                </td>
+                                                <td>
+                                                    {{j.statusName}}
+                                                </td>
+                                                <td>
+                                                    {{j.userRegisterNo}}
+                                                </td>
+                                                <td>
+                                                    {{j.username}}
+                                                </td>
+
+                                                <td>
+                                                    {{j.UY}}
+                                                </td>
+                                                <td>
+                                                    {{j.HTU}}
+                                                </td>
+                                                <td>
+                                                    {{j.material}}
+                                                </td>
+                                                <td>
+                                                    {{j.materialText}}
+                                                </td>
+                                                <td>
+                                                    {{j.MT}}
+                                                </td>
+                                                <td>
+                                                    {{j.amount}}
+                                                </td>
+                                                <td>
+                                                    {{j.brm}}
+                                                </td>
+                                                <td>
+                                                    {{j.priceBrm}}
+                                                </td>
+                                                <td>
+                                                    {{j.total}}
+                                                </td>
+                                                <td>
+                                                    {{j.DnmsMF}}
+                                                </td>
+                                                <td>
+                                                    {{j.DnmsMFValue}}
+                                                </td>
+                                                <td>
+                                                    {{j.orderValue}}
+                                                </td>
+                                                <td>
+                                                    {{j.productCode}}
+                                                </td>
+                                                <td>
+                                                    {{j.productCodeInfo}}
+                                                </td>
+                                                <td>
+                                                    {{j.productYear}}
+                                                </td>
+                                                <td>
+                                                    {{j.registerDate}}
+                                                </td>
+                                                <td>
+                                                    {{j.loginDate}}
+                                                </td>
+                                                <td>
+                                                    {{j.loginDateTime}}
+                                                </td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                            </tr>
+                                            <tr ng-if="!noStartedList || noStartedList.length == 0">
+                                                <td colspan="17" style="text-align:center">
+                                                    <h3>Tablo Boş <i class="fa fa-ban" style="color:red"></i></h3>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                <div class="card-footer clearfix">
+                                    <ul class="pagination pagination-sm m-0 float-right" uib-pagination total-items="noStartedList.length" items-per-page="itemsPerPage2" ng-model="currentPage2" max-size="5" boundary-links="true" num-pages="numPages">
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3l">
+                                <div class="row">
+                                    <div class="col-lg-2">
+
+                                        <div class="input-group mb-4">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" ng-model="searchText3" style="font-weight: normal" placeholder="Ara..." />
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-lg-10">
+                                        <div class="float-right">
+
+                                            Sayfa
+                                            <label>
+                                                <select class="form-control" ng-model="itemsPerPage3" style="font-weight: normal">
+                                                    <option ng-value="2">2</option>
+                                                    <option ng-value="5">5</option>
+                                                    <option ng-value="10">10</option>
+                                                    <option ng-value="25">25</option>
+                                                    <option ng-value="50">50</option>
+                                                </select>
+                                            </label>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-head-fixed text-wrap ">
+                                        <thead>
+                                            <tr>
+                                                <th ng-click="sortBy3('id')">
+                                                    Sıra No
+                                                    <span class="glyphicon" ng-show="sortColumn3=='id'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('statusName')">
+                                                    Durum
+                                                    <span class="glyphicon" ng-show="sortColumn3=='statusName'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('userRegisterNo')">
+                                                    Sicil
+                                                    <span class="glyphicon" ng-show="sortColumn3=='userRegisterNo'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('username')">
+                                                    İsim
+                                                    <span class="glyphicon" ng-show="sortColumn3=='username'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+
+                                                <th ng-click="sortBy3('UY')">
+                                                    ÜY
+                                                    <span class="glyphicon" ng-show="sortColumn3=='UY'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('HTU')">
+                                                    HTü
+                                                    <span class="glyphicon" ng-show="sortColumn3=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('material')">
+                                                    Malzeme
+                                                    <span class="glyphicon" ng-show="sortColumn3=='material'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('HTU')">
+                                                    Malzeme Metni
+                                                    <span class="glyphicon" ng-show="sortColumn3=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('MT')">
+                                                    MT
+                                                    <span class="glyphicon" ng-show="sortColumn3=='MT'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('amount')">
+                                                    Miktar
+                                                    <span class="glyphicon" ng-show="sortColumn3=='amount'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('brm')">
+                                                    Birim
+                                                    <span class="glyphicon" ng-show="sortColumn3=='brm'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('priceBrm')">
+                                                    Fiyat-Birim
+                                                    <span class="glyphicon" ng-show="sortColumn3=='priceBrm'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('total')">
+                                                    Tutar
+                                                    <span class="glyphicon" ng-show="sortColumn3=='total'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('DnmsMF')">
+                                                    Dnms.MF
+                                                    <span class="glyphicon" ng-show="sortColumn3=='DnmsMF'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('DnmsMFValue')">
+                                                    Dnms.MF Değeri
+                                                    <span class="glyphicon" ng-show="sortColumn3=='DnmsMFValue'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('orderValue')">
+                                                    Sipariş
+                                                    <span class="glyphicon" ng-show="sortColumn3=='orderValue'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('productCode')">
+                                                    Motor
+                                                    <span class="glyphicon" ng-show="sortColumn3=='productCode'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('productCodeInfo')">
+                                                    Motor Bilgisi
+                                                    <span class="glyphicon" ng-show="sortColumn3=='productCodeInfo'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('productYear')">
+                                                    Yıl
+                                                    <span class="glyphicon" ng-show="sortColumn3=='productYear'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('registerDate')">
+                                                    Kayıt Tarihi
+                                                    <span class="glyphicon" ng-show="sortColumn3=='registerDate'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('loginDate')">
+                                                    Giriş Tarihi
+                                                    <span class="glyphicon" ng-show="sortColumn3=='loginDate'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy3('loginDateTime')">
+                                                    Saat
+                                                    <span class="glyphicon" ng-show="sortColumn3=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('loginDateTime')">
+                                                    Hareket Sebebi
+                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th ng-click="sortBy('loginDateTime')">
+                                                    Açıklama
+                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                </th>
+                                                <th>
+                                                    İncele
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="k in startedList| orderBy: sortColumn3: reverse3 | limitTo: itemsPerPage3: (currentPage3 - 1) * itemsPerPage3  |filter:searchText3">
+                                            <tr ng-if="k.statusType==2" style="background: #FFE699 ">
+                                                <td>
+                                                    {{k.id}}
+                                                </td>
+                                                <td>
+                                                    {{k.statusName}}
+                                                </td>
+                                                <td>
+                                                    {{k.userRegisterNo}}
+                                                </td>
+                                                <td>
+                                                    {{k.username}}
+                                                </td>
+
+                                                <td>
+                                                    {{k.UY}}
+                                                </td>
+                                                <td>
+                                                    {{k.HTU}}
+                                                </td>
+                                                <td>
+                                                    {{k.material}}
+                                                </td>
+                                                <td>
+                                                    {{k.materialText}}
+                                                </td>
+                                                <td>
+                                                    {{k.MT}}
+                                                </td>
+                                                <td>
+                                                    {{k.amount}}
+                                                </td>
+                                                <td>
+                                                    {{k.brm}}
+                                                </td>
+                                                <td>
+                                                    {{k.priceBrm}}
+                                                </td>
+                                                <td>
+                                                    {{k.total}}
+                                                </td>
+                                                <td>
+                                                    {{k.DnmsMF}}
+                                                </td>
+                                                <td>
+                                                    {{k.DnmsMFValue}}
+                                                </td>
+                                                <td>
+                                                    {{k.orderValue}}
+                                                </td>
+                                                <td>
+                                                    {{k.productCode}}
+                                                </td>
+                                                <td>
+                                                    {{k.productCodeInfo}}
+                                                </td>
+                                                <td>
+                                                    {{k.productYear}}
+                                                </td>
+                                                <td>
+                                                    {{k.registerDate}}
+                                                </td>
+                                                <td>
+                                                    {{k.loginDate}}
+                                                </td>
+                                                <td>
+                                                    {{k.loginDateTime}}
+                                                </td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-detail" ng-click="fetchHistory(k.manualActionID,k)">İncele</button>
+                                                </td>
+
+                                            </tr>
+                                            <tr ng-if="!startedList || startedList.length == 0">
+                                                <td colspan="17" style="text-align:center">
+                                                    <h3>Tablo Boş <i class="fa fa-ban" style="color:red"></i></h3>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                <div class="card-footer clearfix">
+                                    <ul class="pagination pagination-sm m-0 float-right" uib-pagination total-items="startedList.length" items-per-page="itemsPerPage3" ng-model="currentPage3" max-size="5" boundary-links="true" num-pages="numPages">
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4l">
+                                <div class="row">
+                                    <div class="col-lg-2">
+
+                                        <div class="input-group mb-4">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" ng-model="searchText4" style="font-weight: normal" placeholder="Ara..." />
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-lg-10">
+                                        <div class="float-right">
+
+                                            Sayfa
+                                            <label>
+                                                <select class="form-control" ng-model="itemsPerPage4" style="font-weight: normal">
+                                                    <option ng-value="2">2</option>
+                                                    <option ng-value="5">5</option>
+                                                    <option ng-value="10">10</option>
+                                                    <option ng-value="25">25</option>
+                                                    <option ng-value="50">50</option>
+                                                </select>
+                                            </label>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-head-fixed text-wrap ">
+
+                                        <thead>
+                                            <tr>
+                                                <th ng-click="sortBy4('id')">
+                                                    Sıra No
+                                                    <span class="glyphicon" ng-show="sortColumn4=='id'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('statusName')">
+                                                    Durum
+                                                    <span class="glyphicon" ng-show="sortColumn4=='statusName'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('userRegisterNo')">
+                                                    Sicil
+                                                    <span class="glyphicon" ng-show="sortColumn4=='userRegisterNo'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('username')">
+                                                    İsim
+                                                    <span class="glyphicon" ng-show="sortColumn4=='username'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+
+                                                <th ng-click="sortBy4('UY')">
+                                                    ÜY
+                                                    <span class="glyphicon" ng-show="sortColumn4=='UY'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('HTU')">
+                                                    HTü
+                                                    <span class="glyphicon" ng-show="sortColumn4=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('material')">
+                                                    Malzeme
+                                                    <span class="glyphicon" ng-show="sortColumn4=='material'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('HTU')">
+                                                    Malzeme Metni
+                                                    <span class="glyphicon" ng-show="sortColumn4=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('MT')">
+                                                    MT
+                                                    <span class="glyphicon" ng-show="sortColumn4=='MT'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('amount')">
+                                                    Miktar
+                                                    <span class="glyphicon" ng-show="sortColumn4=='amount'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('brm')">
+                                                    Birim
+                                                    <span class="glyphicon" ng-show="sortColumn4=='brm'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('priceBrm')">
+                                                    Fiyat-Birim
+                                                    <span class="glyphicon" ng-show="sortColumn4=='priceBrm'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('total')">
+                                                    Tutar
+                                                    <span class="glyphicon" ng-show="sortColumn4=='total'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('DnmsMF')">
+                                                    Dnms.MF
+                                                    <span class="glyphicon" ng-show="sortColumn4=='DnmsMF'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('DnmsMFValue')">
+                                                    Dnms.MF Değeri
+                                                    <span class="glyphicon" ng-show="sortColumn4=='DnmsMFValue'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('orderValue')">
+                                                    Sipariş
+                                                    <span class="glyphicon" ng-show="sortColumn4=='orderValue'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('productCode')">
+                                                    Motor
+                                                    <span class="glyphicon" ng-show="sortColumn4=='productCode'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('productCodeInfo')">
+                                                    Motor Bilgisi
+                                                    <span class="glyphicon" ng-show="sortColumn4=='productCodeInfo'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('productYear')">
+                                                    Yıl
+                                                    <span class="glyphicon" ng-show="sortColumn4=='productYear'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('registerDate')">
+                                                    Kayıt Tarihi
+                                                    <span class="glyphicon" ng-show="sortColumn4=='registerDate'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('loginDate')">
+                                                    Giriş Tarihi
+                                                    <span class="glyphicon" ng-show="sortColumn4=='loginDate'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th ng-click="sortBy4('loginDateTime')">
+                                                    Saat
+                                                    <span class="glyphicon" ng-show="sortColumn4=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                </th>
+                                                <th>
+                                                    Hareket Sebebi
+                                                </th>
+                                                <th>
+                                                    Açıklama
+                                                </th>
+                                                <th>
+                                                    İncele
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="l in finishedList| orderBy: sortColumn4: reverse4 | limitTo: itemsPerPage4: (currentPage4 - 1) * itemsPerPage4  |filter:searchText4">
+                                            <tr ng-if="!finishedList || finishedList.length == 0">
+                                                <td>
+                                                    <h3>Tablo Boş </h3>
+                                                </td>
+                                            </tr>
+                                            <tr ng-if="l.statusType==3" style="background: #B4DE86 ">
+                                                <td>
+                                                    {{l.id}}
+                                                </td>
+                                                <td>
+                                                    {{l.statusName}}
+                                                </td>
+                                                <td>
+                                                    {{l.userRegisterNo}}
+                                                </td>
+                                                <td>
+                                                    {{l.username}}
+                                                </td>
+
+                                                <td>
+                                                    {{l.UY}}
+                                                </td>
+                                                <td>
+                                                    {{l.HTU}}
+                                                </td>
+                                                <td>
+                                                    {{l.material}}
+                                                </td>
+                                                <td>
+                                                    {{l.materialText}}
+                                                </td>
+                                                <td>
+                                                    {{l.MT}}
+                                                </td>
+                                                <td>
+                                                    {{l.amount}}
+                                                </td>
+                                                <td>
+                                                    {{l.brm}}
+                                                </td>
+                                                <td>
+                                                    {{l.priceBrm}}
+                                                </td>
+                                                <td>
+                                                    {{l.total}}
+                                                </td>
+                                                <td>
+                                                    {{l.DnmsMF}}
+                                                </td>
+                                                <td>
+                                                    {{l.DnmsMFValue}}
+                                                </td>
+                                                <td>
+                                                    {{l.orderValue}}
+                                                </td>
+                                                <td>
+                                                    {{l.productCode}}
+                                                </td>
+                                                <td>
+                                                    {{l.productCodeInfo}}
+                                                </td>
+                                                <td>
+                                                    {{l.productYear}}
+                                                </td>
+                                                <td>
+                                                    {{l.registerDate}}
+                                                </td>
+                                                <td>
+                                                    {{l.loginDate}}
+                                                </td>
+                                                <td>
+                                                    {{l.loginDateTime}}
+                                                </td>
+                                                <td>
+                                                    {{l.actionReason}}
+                                                </td>
+                                                <td>
+                                                    {{l.reasonDetail}}
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-detail" ng-click="fetchHistory(l.manualActionID,l)">İncele</button>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                <div class="card-footer clearfix">
+                                    <ul class="pagination pagination-sm m-0 float-right" uib-pagination total-items="finishedList.length" items-per-page="itemsPerPage4" ng-model="currentPage4" max-size="5" boundary-links="true" num-pages="numPages">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="modal-detail">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="overlay dark" ng-if="!uploading1">
+                                        <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                                    </div>
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">İnceleme</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="timeline">
+                                                    <div class="time-label">
+                                                        <span class="bg-success">Başlangıç</span>
+                                                    </div>
+                                                    <div ng-repeat="x in historyList">
+                                                        <i class="fas fa-comments bg-yellow"></i>
+                                                        <div class="timeline-item">
+                                                            <span class="time"><i class="fas fa-clock"></i>{{x.redirectedDate}}</span>
+                                                            <h3 class="timeline-header"><a href="#">{{x.senderTeam}}-{{x.senderUser}}</a> kullanıcısı ilgili hareketi <a href="#">{{x.receiverTeam}}-{{x.receiverUser}}</a> yönlendirdi.</h3>
+
+                                                            <div class="timeline-body">
+                                                                {{x.redirectedText}}
+                                                            </div>
+                                                            <div class="timeline-footer">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="time-label" ng-if="selectedItem.statusType==2">
+                                                        <i class="fas fa-clock bg-gray"></i>
+                                                    </div>
+                                                    <div ng-if="selectedItem.statusType==3">
+                                                        <i class="fas fa-comments bg-success"></i>
+                                                        <div class="timeline-item">
+                                                            <span class="time"><i class="fas fa-clock"></i>{{selectedItem.madeDate}}</span>
+                                                            <h3 class="timeline-header"><a href="#">{{selectedItem.username}}</a> <strong> ilgili hareketi tamamladı.</strong></h3>
+
+                                                            <div class="timeline-body">
+                                                                <strong> {{selectedItem.actionReason}} </strong> sebebinden dolayı manuel hareket yapılmıştır.
+                                                                Açıklama: {{selectedItem.reasonDetail}}.
+                                                            </div>
+                                                            <div class="timeline-footer">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="time-label" ng-if="selectedItem.statusType==3">
+                                                        <span class="bg-success">Kapandı</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">İptal</button>
+                                        <button type="button" class="btn btn-success" data-dismiss="modal">Tamam</button>
+                                    </div>
+                                </div>
+
+                                <!-- /.modal-content -->
+                            </div>
+
+                            <!-- /.modal-dialog -->
+                        </div>
+
+                        <!-- /.modal -->
+                    </div>
+                    <div class="overlay dark" ng-if="!uploading">
+                        <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </section>
+
+    </div>
+
+</div>
+
+

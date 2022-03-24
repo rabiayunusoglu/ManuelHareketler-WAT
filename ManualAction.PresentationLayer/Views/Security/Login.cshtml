@@ -1,0 +1,69 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manuel Hareketler | WAT Elektrik Motorları</title>
+    <link href="@Url.Content("~/Content/AdminLTE/adminlte.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Plugins/fontawesome-free/css/all.min.css")" rel="stylesheet" />
+</head>
+<body class="hold-transition login-page">
+    <div class="login-page">
+        <!-- /.login-logo -->
+        @using (Html.BeginForm("Login", "Security", FormMethod.Post))
+        {
+            <div class="card card-outline card-dark">
+                <div class="card-header text-center">
+                    <center> <img src="@Url.Content("~/Content/wat.png")" width="125" height="125" /></center>
+                    <a class="h1">Manuel Hareketler</a>
+                </div>
+                <div class="card-body">
+                    <br />
+
+                    <form>
+                        <div class="input-group mb-3">
+                            <input type="text" id="registerNo" name="registerNo" class="form-control" placeholder="Sicil">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-envelope"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Şifre">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-lock"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                </div>
+                <div class="card-footer">
+                    <center>
+                        <div>
+                            <button type="submit" class="btn btn-dark btn-block">Giriş</button>
+                        </div>
+                    </center>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        }
+        <!-- /.card -->
+    </div>
+    <!-- /.login-box -->
+    @Scripts.Render("~/bundles/jquery")
+    <script src="@Url.Content("~/Plugins/bootstrap/js/bootstrap.bundle.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/AdminLTE/adminlte.min.js")"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>
+
