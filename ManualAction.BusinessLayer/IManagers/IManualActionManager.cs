@@ -25,8 +25,17 @@ namespace ManualAction.BusinessLayer.IManagers
         byte[] ExporttoExcelByDate(DateTime startDate, DateTime endDate);
         List<List<ReportDTO>> GetReport();
         List<ReportDTO> GetReason();
+        List<ReportDTO> GetYear();
         List<ReportDTO> GetMonth();
         List<ReportDTO> GetReasonByMonth();
 
+        List<List<ReportDTO>> GetReportByDate(string sortDate);
+        List<ReportDTO> GetReasonByDate(string sortDate);
+        List<ReportDTO> GetReasonByMonthByDateYear(string sortDate);
+        List<ReportDTO> GetMonthByDate(string sortDate);
+        List<ReportDTO> GetReasonByMonthByDate(string sortDate);
+        List<ReportDTO> GetReasonByYear(string year);
+        List<ReportDTO> GetMonthByYear(string year);
+        List<ReportDTO> GetReasonByMonthByYear(string year);
     }
 }

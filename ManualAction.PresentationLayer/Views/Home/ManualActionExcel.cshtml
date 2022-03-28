@@ -48,11 +48,53 @@
                                 <i class="fas fa-2x fa-sync-alt fa-spin"></i>
                             </div>
                         </div>
-                       
+
 
                     </div>
                     <!-- /.col -->
                 </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-dark">
+                            <div class="card-header">
+                                <center><h4 class="card-title">Silinecek Manuel Hareketleri Seçiniz</h4></center>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <label class="col-lg-1 control-label">Ay:</label>
+                                    <div class="col-lg-4">
+                                        <select class="form-control" ng-model="selectedMonth" ng-options="x for x in ['Tümü','Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık']">
+                                        </select>
+                                    </div>
+                                    <label class="col-lg-1 control-label">Yıl:</label>
+                                    <div class="col-lg-4">
+                                        <select class="form-control" ng-model="selectedYear" ng-options="t.productYear for t in year">
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-2">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <center>
+
+                                    <input class="btn btn-dark" type="submit" name="Submit" ng-click="" value="Sil" />
+                                </center>
+                            </div>
+                            <div class="overlay dark" ng-if="!uploading">
+                                <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- /.col -->
+                </div>
+
             </div><!-- /.container-fluid -->
         </section>
 

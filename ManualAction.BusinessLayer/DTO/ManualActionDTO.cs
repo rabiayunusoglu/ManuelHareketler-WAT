@@ -33,6 +33,7 @@ namespace ManualAction.BusinessLayer.DTO
         public string actionReason { get; set; }
         public string reasonDetail { get; set; }
         public Nullable<System.DateTime> madeDate { get; set; }
+        public string madeDateText { get; set; }
         public Nullable<int> statusType { get; set; }
         public string statusName { get; set; }
         public Nullable<bool> isRedirected { get; set; }

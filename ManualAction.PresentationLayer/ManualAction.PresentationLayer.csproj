@@ -153,11 +153,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Chart.css" />
     <Content Include="Content\Chart.min.css" />
-    <Content Include="Content\Images\AdminLTELogo.png" />
-    <Content Include="Content\Images\user1-128x128.jpg" />
-    <Content Include="Content\Images\user2-160x160.jpg" />
-    <Content Include="Content\Images\user3-128x128.jpg" />
-    <Content Include="Content\Images\user8-128x128.jpg" />
+    <Content Include="Content\Images\user.jpg" />
     <Content Include="Content\login.css" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />

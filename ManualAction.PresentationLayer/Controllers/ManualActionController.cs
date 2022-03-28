@@ -265,5 +265,12 @@ namespace ManualAction.PresentationLayer.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+        public JsonResult GetReportByDate(string sortDate)
+        {
+            var _list = manager.GetReportByDate(sortDate);
+            var jsonResult = Json(_list, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
     }
 }

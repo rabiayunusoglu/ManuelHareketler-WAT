@@ -69,19 +69,22 @@
                                                 <label class="btn btn-dark " ng-click="fetchData()">
                                                     <input type="radio" name="options" id="option_a4"> Tümünü Getir
                                                 </label>
-                                                <label class="btn btn-success " ng-click="Export()">
+                                                <label class="btn btn-secondary " ng-click="Export()">
                                                     <input type="radio" name="options" id="option_a3"> Excel Aktar
                                                 </label>
-                                                <label class="btn btn-info " ng-click="fetchDataByDate()">
+                                                <label class="btn btn-dark " ng-click="fetchDataByDate()">
                                                     <input type="radio" name="options" id="option_a1"> Getir
                                                 </label>
-                                                <label class="btn btn-success " ng-click="ExportByDate()">
+                                                <label class="btn btn-secondary " ng-click="ExportByDate()">
                                                     <input type="radio" name="options" id="option_a2"> Excel Aktar
+                                                </label>
+                                                <label class="btn btn-dark " ng-click="">
+                                                    <input type="radio" name="options" id="option_a2"> Tamamlananları Göster
                                                 </label>
                                             </div>
 
                                         </div>
-                                        
+
                                     </div>
 
                                 </div>
@@ -120,100 +123,100 @@
                                             <tr>
                                                 <th ng-click="sortBy('id')">
                                                     Sıra No
-                                                    <span class="glyphicon" ng-show="sortColumn=='id'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='id'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('statusName')">
                                                     Durum
-                                                    <span class="glyphicon" ng-show="sortColumn=='statusName'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='statusName'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('userRegisterNo')">
                                                     Sicil
-                                                    <span class="glyphicon" ng-show="sortColumn=='userRegisterNo'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='userRegisterNo'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('username')">
                                                     İsim
-                                                    <span class="glyphicon" ng-show="sortColumn=='username'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='username'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
 
                                                 <th ng-click="sortBy('UY')">
                                                     ÜY
-                                                    <span class="glyphicon" ng-show="sortColumn=='UY'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='UY'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('HTU')">
                                                     HTü
-                                                    <span class="glyphicon" ng-show="sortColumn=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='HTU'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('material')">
                                                     Malzeme
-                                                    <span class="glyphicon" ng-show="sortColumn=='material'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='material'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('HTU')">
                                                     Malzeme Metni
-                                                    <span class="glyphicon" ng-show="sortColumn=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='HTU'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('MT')">
                                                     MT
-                                                    <span class="glyphicon" ng-show="sortColumn=='MT'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='MT'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('amount')">
                                                     Miktar
-                                                    <span class="glyphicon" ng-show="sortColumn=='amount'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='amount'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('brm')">
                                                     Birim
-                                                    <span class="glyphicon" ng-show="sortColumn=='brm'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='brm'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('priceBrm')">
                                                     Fiyat-Birim
-                                                    <span class="glyphicon" ng-show="sortColumn=='priceBrm'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='priceBrm'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('total')">
                                                     Tutar
-                                                    <span class="glyphicon" ng-show="sortColumn=='total'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='total'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('DnmsMF')">
                                                     Dnms.MF
-                                                    <span class="glyphicon" ng-show="sortColumn=='DnmsMF'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='DnmsMF'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('DnmsMFValue')">
                                                     Dnms.MF Değeri
-                                                    <span class="glyphicon" ng-show="sortColumn=='DnmsMFValue'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='DnmsMFValue'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('orderValue')">
                                                     Sipariş
-                                                    <span class="glyphicon" ng-show="sortColumn=='orderValue'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='orderValue'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('productCode')">
                                                     Motor
-                                                    <span class="glyphicon" ng-show="sortColumn=='productCode'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='productCode'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('productCodeInfo')">
                                                     Motor Bilgisi
-                                                    <span class="glyphicon" ng-show="sortColumn=='productCodeInfo'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='productCodeInfo'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('productYear')">
                                                     Yıl
-                                                    <span class="glyphicon" ng-show="sortColumn=='productYear'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='productYear'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('registerDate')">
                                                     Kayıt Tarihi
-                                                    <span class="glyphicon" ng-show="sortColumn=='registerDate'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='registerDate'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('loginDate')">
                                                     Giriş Tarihi
-                                                    <span class="glyphicon" ng-show="sortColumn=='loginDate'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='loginDate'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('loginDateTime')">
                                                     Saat
-                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='loginDateTime'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('loginDateTime')">
                                                     Hareket Sebebi
-                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='loginDateTime'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('loginDateTime')">
                                                     Açıklama
-                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='loginDateTime'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th>
                                                     İncele
@@ -505,100 +508,100 @@
                                             <tr>
                                                 <th ng-click="sortBy2('id')">
                                                     Sıra No
-                                                    <span class="glyphicon" ng-show="sortColumn2=='id'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='id'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('statusName')">
                                                     Durum
-                                                    <span class="glyphicon" ng-show="sortColumn2=='statusName'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='statusName'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('userRegisterNo')">
                                                     Sicil
-                                                    <span class="glyphicon" ng-show="sortColumn2=='userRegisterNo'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='userRegisterNo'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('username')">
                                                     İsim
-                                                    <span class="glyphicon" ng-show="sortColumn2=='username'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='username'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
 
                                                 <th ng-click="sortBy2('UY')">
                                                     ÜY
-                                                    <span class="glyphicon" ng-show="sortColumn2=='UY'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='UY'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('HTU')">
                                                     HTü
-                                                    <span class="glyphicon" ng-show="sortColumn2=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='HTU'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('material')">
                                                     Malzeme
-                                                    <span class="glyphicon" ng-show="sortColumn2=='material'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='material'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('HTU')">
                                                     Malzeme Metni
-                                                    <span class="glyphicon" ng-show="sortColumn2=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='HTU'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('MT')">
                                                     MT
-                                                    <span class="glyphicon" ng-show="sortColumn2=='MT'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='MT'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('amount')">
                                                     Miktar
-                                                    <span class="glyphicon" ng-show="sortColumn2=='amount'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='amount'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('brm')">
                                                     Birim
-                                                    <span class="glyphicon" ng-show="sortColumn2=='brm'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='brm'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('priceBrm')">
                                                     Fiyat-Birim
-                                                    <span class="glyphicon" ng-show="sortColumn2=='priceBrm'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='priceBrm'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('total')">
                                                     Tutar
-                                                    <span class="glyphicon" ng-show="sortColumn2=='total'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='total'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('DnmsMF')">
                                                     Dnms.MF
-                                                    <span class="glyphicon" ng-show="sortColumn2=='DnmsMF'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='DnmsMF'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('DnmsMFValue')">
                                                     Dnms.MF Değeri
-                                                    <span class="glyphicon" ng-show="sortColumn2=='DnmsMFValue'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='DnmsMFValue'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('orderValue')">
                                                     Sipariş
-                                                    <span class="glyphicon" ng-show="sortColumn2=='orderValue'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='orderValue'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('productCode')">
                                                     Motor
-                                                    <span class="glyphicon" ng-show="sortColumn2=='productCode'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='productCode'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('productCodeInfo')">
                                                     Motor Bilgisi
-                                                    <span class="glyphicon" ng-show="sortColumn2=='productCodeInfo'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='productCodeInfo'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('productYear')">
                                                     Yıl
-                                                    <span class="glyphicon" ng-show="sortColumn2=='productYear'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='productYear'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('registerDate')">
                                                     Kayıt Tarihi
-                                                    <span class="glyphicon" ng-show="sortColumn2=='registerDate'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='registerDate'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('loginDate')">
                                                     Giriş Tarihi
-                                                    <span class="glyphicon" ng-show="sortColumn2=='loginDate'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='loginDate'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy2('loginDateTime')">
                                                     Saat
-                                                    <span class="glyphicon" ng-show="sortColumn2=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn2=='loginDateTime'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse2, 'fas fa-sort-alpha-down-alt': reverse2}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('loginDateTime')">
                                                     Hareket Sebebi
-                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='loginDateTime'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('loginDateTime')">
                                                     Açıklama
-                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='loginDateTime'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                             </tr>
                                         </thead>
@@ -726,100 +729,100 @@
                                             <tr>
                                                 <th ng-click="sortBy3('id')">
                                                     Sıra No
-                                                    <span class="glyphicon" ng-show="sortColumn3=='id'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='id'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('statusName')">
                                                     Durum
-                                                    <span class="glyphicon" ng-show="sortColumn3=='statusName'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='statusName'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('userRegisterNo')">
                                                     Sicil
-                                                    <span class="glyphicon" ng-show="sortColumn3=='userRegisterNo'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='userRegisterNo'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('username')">
                                                     İsim
-                                                    <span class="glyphicon" ng-show="sortColumn3=='username'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='username'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
 
                                                 <th ng-click="sortBy3('UY')">
                                                     ÜY
-                                                    <span class="glyphicon" ng-show="sortColumn3=='UY'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='UY'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('HTU')">
                                                     HTü
-                                                    <span class="glyphicon" ng-show="sortColumn3=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='HTU'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('material')">
                                                     Malzeme
-                                                    <span class="glyphicon" ng-show="sortColumn3=='material'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='material'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('HTU')">
                                                     Malzeme Metni
-                                                    <span class="glyphicon" ng-show="sortColumn3=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='HTU'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('MT')">
                                                     MT
-                                                    <span class="glyphicon" ng-show="sortColumn3=='MT'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='MT'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('amount')">
                                                     Miktar
-                                                    <span class="glyphicon" ng-show="sortColumn3=='amount'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='amount'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('brm')">
                                                     Birim
-                                                    <span class="glyphicon" ng-show="sortColumn3=='brm'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='brm'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('priceBrm')">
                                                     Fiyat-Birim
-                                                    <span class="glyphicon" ng-show="sortColumn3=='priceBrm'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='priceBrm'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('total')">
                                                     Tutar
-                                                    <span class="glyphicon" ng-show="sortColumn3=='total'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='total'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('DnmsMF')">
                                                     Dnms.MF
-                                                    <span class="glyphicon" ng-show="sortColumn3=='DnmsMF'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='DnmsMF'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('DnmsMFValue')">
                                                     Dnms.MF Değeri
-                                                    <span class="glyphicon" ng-show="sortColumn3=='DnmsMFValue'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='DnmsMFValue'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('orderValue')">
                                                     Sipariş
-                                                    <span class="glyphicon" ng-show="sortColumn3=='orderValue'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='orderValue'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('productCode')">
                                                     Motor
-                                                    <span class="glyphicon" ng-show="sortColumn3=='productCode'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='productCode'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('productCodeInfo')">
                                                     Motor Bilgisi
-                                                    <span class="glyphicon" ng-show="sortColumn3=='productCodeInfo'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='productCodeInfo'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('productYear')">
                                                     Yıl
-                                                    <span class="glyphicon" ng-show="sortColumn3=='productYear'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='productYear'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('registerDate')">
                                                     Kayıt Tarihi
-                                                    <span class="glyphicon" ng-show="sortColumn3=='registerDate'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='registerDate'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('loginDate')">
                                                     Giriş Tarihi
-                                                    <span class="glyphicon" ng-show="sortColumn3=='loginDate'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='loginDate'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy3('loginDateTime')">
                                                     Saat
-                                                    <span class="glyphicon" ng-show="sortColumn3=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn3=='loginDateTime'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse3, 'fas fa-sort-alpha-down-alt': reverse3}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('loginDateTime')">
                                                     Hareket Sebebi
-                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='loginDateTime'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th ng-click="sortBy('loginDateTime')">
                                                     Açıklama
-                                                    <span class="glyphicon" ng-show="sortColumn=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn=='loginDateTime'" ng-class="{'fa-sort-alpha-up-alt': !reverse, 'fa-sort-alpha-down-alt': reverse}"></span>
                                                 </th>
                                                 <th>
                                                     İncele
@@ -958,92 +961,92 @@
                                             <tr>
                                                 <th ng-click="sortBy4('id')">
                                                     Sıra No
-                                                    <span class="glyphicon" ng-show="sortColumn4=='id'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='id'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('statusName')">
                                                     Durum
-                                                    <span class="glyphicon" ng-show="sortColumn4=='statusName'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='statusName'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('userRegisterNo')">
                                                     Sicil
-                                                    <span class="glyphicon" ng-show="sortColumn4=='userRegisterNo'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='userRegisterNo'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('username')">
                                                     İsim
-                                                    <span class="glyphicon" ng-show="sortColumn4=='username'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='username'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
 
                                                 <th ng-click="sortBy4('UY')">
                                                     ÜY
-                                                    <span class="glyphicon" ng-show="sortColumn4=='UY'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='UY'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('HTU')">
                                                     HTü
-                                                    <span class="glyphicon" ng-show="sortColumn4=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='HTU'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('material')">
                                                     Malzeme
-                                                    <span class="glyphicon" ng-show="sortColumn4=='material'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='material'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('HTU')">
                                                     Malzeme Metni
-                                                    <span class="glyphicon" ng-show="sortColumn4=='HTU'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='HTU'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('MT')">
                                                     MT
-                                                    <span class="glyphicon" ng-show="sortColumn4=='MT'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='MT'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('amount')">
                                                     Miktar
-                                                    <span class="glyphicon" ng-show="sortColumn4=='amount'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='amount'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('brm')">
                                                     Birim
-                                                    <span class="glyphicon" ng-show="sortColumn4=='brm'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='brm'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('priceBrm')">
                                                     Fiyat-Birim
-                                                    <span class="glyphicon" ng-show="sortColumn4=='priceBrm'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='priceBrm'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('total')">
                                                     Tutar
-                                                    <span class="glyphicon" ng-show="sortColumn4=='total'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='total'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('DnmsMF')">
                                                     Dnms.MF
-                                                    <span class="glyphicon" ng-show="sortColumn4=='DnmsMF'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='DnmsMF'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('DnmsMFValue')">
                                                     Dnms.MF Değeri
-                                                    <span class="glyphicon" ng-show="sortColumn4=='DnmsMFValue'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='DnmsMFValue'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('orderValue')">
                                                     Sipariş
-                                                    <span class="glyphicon" ng-show="sortColumn4=='orderValue'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='orderValue'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('productCode')">
                                                     Motor
-                                                    <span class="glyphicon" ng-show="sortColumn4=='productCode'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='productCode'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('productCodeInfo')">
                                                     Motor Bilgisi
-                                                    <span class="glyphicon" ng-show="sortColumn4=='productCodeInfo'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='productCodeInfo'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('productYear')">
                                                     Yıl
-                                                    <span class="glyphicon" ng-show="sortColumn4=='productYear'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='productYear'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('registerDate')">
                                                     Kayıt Tarihi
-                                                    <span class="glyphicon" ng-show="sortColumn4=='registerDate'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='registerDate'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('loginDate')">
                                                     Giriş Tarihi
-                                                    <span class="glyphicon" ng-show="sortColumn4=='loginDate'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='loginDate'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th ng-click="sortBy4('loginDateTime')">
                                                     Saat
-                                                    <span class="glyphicon" ng-show="sortColumn4=='loginDateTime'" ng-class="{'glyphicon-triangle-top': !reverse4, 'glyphicon-triangle-bottom': reverse4}"></span>
+                                                    <span class="fas fa-sort-alpha-down-alt" ng-show="sortColumn4=='loginDateTime'" ng-class="{'fas fa-sort-alpha-up-alt': !reverse4, 'fas fa-sort-alpha-down-alt': reverse4}"></span>
                                                 </th>
                                                 <th>
                                                     Hareket Sebebi
@@ -1189,7 +1192,7 @@
                                                     <div ng-if="selectedItem.statusType==3">
                                                         <i class="fas fa-comments bg-success"></i>
                                                         <div class="timeline-item">
-                                                            <span class="time"><i class="fas fa-clock"></i>{{selectedItem.madeDate}}</span>
+                                                            <span class="time"><i class="fas fa-clock"></i>{{selectedItem.madeDateText}}</span>
                                                             <h3 class="timeline-header"><a href="#">{{selectedItem.username}}</a> <strong> ilgili hareketi tamamladı.</strong></h3>
 
                                                             <div class="timeline-body">

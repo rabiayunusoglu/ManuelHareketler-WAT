@@ -449,13 +449,15 @@
                     colorByReason = [];
                     colorByMonth = [];
                     $scope.total = response.data[2];
-
+                    $scope.year = response.data[3];
                     $scope.columnList = response.data[0].map(x => {
                         return {
                             ...x, month: (x.sortingDate.substr(4, 2)), year: (x.sortingDate.substr(0, 4)),
                             colName: ((x.sortingDate.substr(4, 2)) == "01") ? "Ocak" : ((x.sortingDate.substr(4, 2)) == "02") ? "Şubat" : ((x.sortingDate.substr(4, 2)) == "03") ? "Mart" : ((x.sortingDate.substr(4, 2)) == "04") ? "Nisan" : ((x.sortingDate.substr(4, 2)) == "05") ? "Mayıs" : ((x.sortingDate.substr(4, 2)) == "06") ? "Haziran" : ((x.sortingDate.substr(4, 2)) == "07") ? "Temmuz" : ((x.sortingDate.substr(4, 2)) == "08") ? "Ağustos" : ((x.sortingDate.substr(4, 2)) == "09") ? "Eylül" : ((x.sortingDate.substr(4, 2)) == "10") ? "Ekim" : ((x.sortingDate.substr(4, 2)) == "11") ? "Kasım" : ((x.sortingDate.substr(4, 2)) == "12") ? "Aralık" : "",
                         }
                     });
+                    $scope.selectBar = $scope.columnList;
+
                     $scope.colunmLabel = $scope.columnList.map(t => t.colName + "-" + t.year);
                     $scope.colunmData = $scope.columnList.map(t => t.sumAmount);
 
@@ -463,7 +465,7 @@
                     $scope.lineLabel = $scope.lineList.map(t => t.actionReason == "-" ? "Sebep Girilmemiş" : t.actionReason);
                     $scope.lineData = $scope.lineList.map(t => t.sumAmount);
 
-                    $scope.setChart($scope.lineLabel, $scope.lineData, $scope.lineList, $scope.colunmLabel, $scope.colunmData );
+                    $scope.setChart($scope.lineLabel, $scope.lineData, $scope.lineList, $scope.colunmLabel, $scope.colunmData);
                 }
                 $scope.uploading = true;
             }, function () {
@@ -471,15 +473,53 @@
             });
         };
 
-        $scope.setChartByDate = function () {
+        $scope.fetchDataByDate = function () {
+            $scope.uploading = false;
+            $scope.manualActionList = [];
+            var date = (($scope.selectedMonth) == "Ocak") ? "01" : (($scope.selectedMonth) == "Şubat") ? "02" : (($scope.selectedMonth) == "Mart") ? "03" : (($scope.selectedMonth) == "Nisan") ? "04" : (($scope.selectedMonth) == "Mayıs") ? "05" : (($scope.selectedMonth) == "Haziran") ? "06" : (($scope.selectedMonth) == "Temmuz") ? "07" : (($scope.selectedMonth) == "Ağustos") ? "08" : (($scope.selectedMonth) == "Eylül") ? "09" : (($scope.selectedMonth) == "Ekim") ? "10" : (($scope.selectedMonth) == "Kasım") ? "11" : (($scope.selectedMonth) == "Aralık") ? "12" : "-";
+            $http.get($rootScope.url + "/ManualAction/GetReportByDate?sortDate=" + $scope.selectedYear.productYear + date).then(function (response) {
+                if (response != null || response.data != null) {
+                    console.log(response.data)
+                    
+                    ict_unit = [];
+                    efficiency = [];
+                    colorByReason = [];
+                    colorByMonth = [];
+                    $scope.total = response.data[2];
+                    
 
-        }
+                    $scope.columnList = response.data[0].map(x => {
+                        return {
+                            ...x, month: (x.sortingDate.substr(4, 2)), year: (x.sortingDate.substr(0, 4)),
+                            colName: ((x.sortingDate.substr(4, 2)) == "01") ? "Ocak" : ((x.sortingDate.substr(4, 2)) == "02") ? "Şubat" : ((x.sortingDate.substr(4, 2)) == "03") ? "Mart" : ((x.sortingDate.substr(4, 2)) == "04") ? "Nisan" : ((x.sortingDate.substr(4, 2)) == "05") ? "Mayıs" : ((x.sortingDate.substr(4, 2)) == "06") ? "Haziran" : ((x.sortingDate.substr(4, 2)) == "07") ? "Temmuz" : ((x.sortingDate.substr(4, 2)) == "08") ? "Ağustos" : ((x.sortingDate.substr(4, 2)) == "09") ? "Eylül" : ((x.sortingDate.substr(4, 2)) == "10") ? "Ekim" : ((x.sortingDate.substr(4, 2)) == "11") ? "Kasım" : ((x.sortingDate.substr(4, 2)) == "12") ? "Aralık" : "",
+                        }
+                    });
+                    $scope.year = response.data[3];
+
+                    $scope.colunmLabel = $scope.columnList.map(t => t.colName + "-" + t.year);
+                    $scope.colunmData = $scope.columnList.map(t => t.sumAmount);
+
+                    $scope.lineList = response.data[1];
+                    $scope.lineLabel = $scope.lineList.map(t => t.actionReason == "-" ? "Sebep Girilmemiş" : t.actionReason);
+                    $scope.lineData = $scope.lineList.map(t => t.sumAmount);
+                    $scope.monthBarChart.destroy();
+                    $scope.reportChart.destroy();
+                    $scope.monthPieChart.destroy();
+                    $scope.reasonBarChart.destroy();
+                    $scope.reasonPieChart.destroy();
+                    $scope.setChart($scope.lineLabel, $scope.lineData, $scope.lineList, $scope.colunmLabel, $scope.colunmData);
+                }
+                $scope.uploading = true;
+            }, function () {
+                $scope.uploading = true;
+            });
+        };
+
         $scope.setChart = function (labelOfLine, dataOfLine, listOfLine, labelOfColunm, dataOfColunm) {
             setColorReason();
             setColorMonth();
-
             const reasonPie = document.getElementById('reasonPieChart');
-            const reasonPieChart = new Chart(reasonPie, {
+            $scope.reasonPieChart = new Chart(reasonPie, {
                 type: 'pie',
                 data: {
                     labels: labelOfLine,
@@ -496,7 +536,7 @@
                 },
             });
             const reasonBar = document.getElementById('reasonBarChart');
-            const reasonBarChart = new Chart(reasonBar, {
+            $scope.reasonBarChart = new Chart(reasonBar, {
                 type: 'bar',
                 data: {
                     labels: labelOfLine,
@@ -508,9 +548,8 @@
                 },
 
             });
-
             const monthPie = document.getElementById('monthPieChart');
-            const monthPieChart = new Chart(monthPie, {
+            $scope.monthPieChart = new Chart(monthPie, {
                 type: 'pie',
                 data: {
                     labels: labelOfColunm,
@@ -529,7 +568,7 @@
                 }
             });
             const monthBar = document.getElementById('monthBarChart');
-            const monthBarChart = new Chart(monthBar, {
+            $scope.monthBarChart = new Chart(monthBar, {
                 type: 'bar',
                 data: {
                     labels: labelOfColunm,
@@ -541,7 +580,6 @@
                 },
 
             });
-
             var dataSets = [];
             for (var i = 0; i < listOfLine.length; i++) {
                 var temp = {
@@ -556,7 +594,7 @@
             }
             const report = document.getElementById('reportChart');
 
-            const reportChart = new Chart(report, {
+            $scope.reportChart = new Chart(report, {
                 type: 'bar',
                 data: {
                     labels: labelOfColunm,
@@ -564,19 +602,8 @@
                 },
 
             });
+            
         };
-        $scope.Save() = function () {
-            PrintImage();
-            return;
-        }
-        function PrintImage() {
-            var canvas = document.getElementById("reportChart");
-            var win = window.open();
-            win.document.write("<br><img src='" + canvas.toDataURL() + "'/>");
-            win.print();
-            win.location.reload();
-
-        }
         function getRandomColor() {
             var letters = '0123456789ABCDEF'.split('');
             var color = '#';
