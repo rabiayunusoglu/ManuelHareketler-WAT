@@ -63,5 +63,12 @@ namespace ManualAction.DataAccessLayer.Repositories.Concrete
             _context.Entry(entity).State = System.Data.Entity.EntityState.Modified;
             return entity;
         }
+        public bool Clear (List<E> dbSetg)
+        {
+           var g= _dbSet.RemoveRange(dbSetg);
+            if (g == null)
+                return false;
+            return true;
+        }
     }
 }

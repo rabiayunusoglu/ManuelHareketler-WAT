@@ -36,6 +36,7 @@
     }])
     manuelApp.controller('manualActionUserCtrl', ['$scope', '$rootScope', '$filter', '$location', '$http', function ($scope, $rootScope, $filter, $location, $http) {
         $scope.manualActionList = [];
+        $scope.toogleForFinishButton = true;
         $scope.noStartedList = [];
         $scope.startedList = [];
         $scope.finishedList = [];
@@ -184,6 +185,7 @@
             item.madeDate = new Date();
             $http.post($rootScope.url + "/ManualAction/Edit", item).then(function (response) {
                 if (response != null || response.data != false) {
+                    $scope.fetchData();
                     toastr.success("Tamamlandı");
                     $scope.finishItem = [];
                 }
@@ -214,6 +216,7 @@
             item.redirectedUser = item.redirectedUser.username;
             $http.post($rootScope.url + "/ManualAction/RedirectItem", item).then(function (response) {
                 if (response != null || response.data != false) {
+                    $scope.fetchData();
                     toastr.success("Yönlendirildi");
                     $scope.redirectItem = [];
                 }
@@ -232,6 +235,55 @@
                 return;
             $scope.endDate = document.getElementById("data-endDate").value;
             $scope.startDate = document.getElementById("data-startDate").value;
+        };
+
+        $scope.Export = function () {
+            $scope.setDateFilter();
+            if ($scope.manualActionList != null && $scope.manualActionList.length !== 0) {
+                $scope.uploading = false;
+                $http({
+                    method: "get",
+                    url: $rootScope.url + '/ManualAction/ExportByRegNo',
+                    responseType: "blob"
+                }).then(function (response) {
+                    $scope.uploading = true;
+                    var date = new Date().toISOString().substr(0, 10);
+                    //var myBlob = new Blob([result.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
+                    const url = window.URL.createObjectURL(response.data);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.setAttribute("download", `WAT-Manuel Hareketler//${date}.xlsx`); //or any other extension
+                    document.body.appendChild(link);
+                    link.click();
+                    toastr.success("Excel Dosyasına Aktarıldı.");
+                });
+            } else {
+                toastr.warning("Tablo Boş");
+            }
+        };
+        $scope.ExportByDate = function () {
+            $scope.setDateFilter();
+            if ($scope.manualActionList != null && $scope.manualActionList.length !== 0) {
+                $scope.uploading = false;
+                $http({
+                    method: "get",
+                    url: $rootScope.url + `/ManualAction/ExportByDateRegNo?startDate=${$scope.startDate}&endDate=${$scope.endDate}`,
+                    responseType: "blob"
+                }).then(function (response) {
+                    $scope.uploading = true;
+                    var date = new Date().toISOString().substr(0, 10);
+                    //var myBlob = new Blob([result.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
+                    const url = window.URL.createObjectURL(response.data);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.setAttribute("download", `WAT-Manuel Hareketler//${date}.xlsx`); //or any other extension
+                    document.body.appendChild(link);
+                    link.click();
+                    toastr.success("Excel Dosyasına Aktarıldı.");
+                });
+            } else {
+                toastr.warning("Tablo Boş");
+            }
         };
     }])
 
@@ -268,6 +320,7 @@
         $scope.finishedList = [];
         $scope.uploading = true;
         $scope.uploading1 = true;
+        $scope.toogleForFinishButton = true;
         $scope.currentPage = 1;
         $scope.itemsPerPage = 10;
         $scope.currentPage2 = 1;
@@ -688,6 +741,7 @@
     manuelApp.controller('excelManualActionCtrl', ['$scope', '$rootScope', '$filter', '$location', '$http', function ($scope, $rootScope, $filter, $location, $http) {
 
         $scope.uploading = true;
+        $scope.uploading1 = true;
         var formdata = new FormData();
         $scope.getTheFiles = function ($files) {
             angular.forEach($files, function (value, key) {
@@ -730,6 +784,34 @@
 
         }
 
+        $scope.fetchData = function () {
+            $scope.uploading1 = false;
+            $http.get($rootScope.url + "/ManualAction/GetYear").then(function (response) {
+                if (response != null || response.data != null) {
+                    $scope.year = response.data;
+                }
+                $scope.uploading1 = true;
+            }, function () {
+                $scope.uploading1 = true;
+            });
+        };
+        $scope.deleteData = function () {
+            $scope.uploading1 = false;
+            var date = (($scope.selectedMonth) == "Ocak") ? "01" : (($scope.selectedMonth) == "Şubat") ? "02" : (($scope.selectedMonth) == "Mart") ? "03" : (($scope.selectedMonth) == "Nisan") ? "04" : (($scope.selectedMonth) == "Mayıs") ? "05" : (($scope.selectedMonth) == "Haziran") ? "06" : (($scope.selectedMonth) == "Temmuz") ? "07" : (($scope.selectedMonth) == "Ağustos") ? "08" : (($scope.selectedMonth) == "Eylül") ? "09" : (($scope.selectedMonth) == "Ekim") ? "10" : (($scope.selectedMonth) == "Kasım") ? "11" : (($scope.selectedMonth) == "Aralık") ? "12" : "-";
+            
+            console.log($scope.selectedYear.productYear + date)
+            $http.post($rootScope.url + `/ManualAction/DeleteByDate?sortDate=${$scope.selectedYear.productYear + date}`).then(function (response) {
+                if (response != null || response.data != null) {
+                    if (response.data)
+                        toastr.success("Silindi");
+                    else
+                        toastr.error("Başarısız");
+                }
+                $scope.uploading1 = true;
+            }, function () {
+                $scope.uploading1 = true;
+            });
+        };
     }])
 
 

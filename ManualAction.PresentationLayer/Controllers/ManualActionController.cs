@@ -194,6 +194,55 @@ namespace ManualAction.PresentationLayer.Controllers
                 return;
             }
         }
+        public void ExportByRegNo()
+        {
+            try
+            {
+                SecurityController security = new SecurityController();
+                string regNo = HttpContext.Session["registerNo"].ToString();
+                if (regNo == null || regNo.Length == 0)
+                    return;
+                byte[] temp = manager.ExporttoExcelByRegNo(regNo);
+                if (temp == null)
+                    return;
+                Response.ClearContent();
+                Response.BinaryWrite(temp);
+                Response.AddHeader("content-disposition", "attachment; filename=Rabia.xlsx");
+                Response.ContentType = "application/vnd.ms-excel";
+                Response.Flush();
+                Response.End();
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+
+        }
+        public void ExportByDateRegNo(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                if (startDate == null || endDate == null)
+                    return;
+                SecurityController security = new SecurityController();
+                string regNo = HttpContext.Session["registerNo"].ToString();
+                if (regNo == null || regNo.Length == 0)
+                    return;
+                byte[] temp = manager.ExporttoExcelByDateRegNo(startDate, endDate, regNo);
+                if (temp == null)
+                    return;
+                Response.ClearContent();
+                Response.BinaryWrite(temp);
+                Response.AddHeader("content-disposition", "attachment; filename=Rabia.xlsx");
+                Response.ContentType = "application/vnd.ms-excel";
+                Response.Flush();
+                Response.End();
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
 
         public JsonResult GetByDate(DateTime startDate, DateTime endDate)
         {
@@ -268,6 +317,20 @@ namespace ManualAction.PresentationLayer.Controllers
         public JsonResult GetReportByDate(string sortDate)
         {
             var _list = manager.GetReportByDate(sortDate);
+            var jsonResult = Json(_list, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult DeleteByDate(string sortDate)
+        {
+            var _listManager = manager.DeleteManagerByDate(sortDate);
+            return Json(_listManager, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetYear()
+        {
+            var _list = manager.GetYear();
             var jsonResult = Json(_list, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;

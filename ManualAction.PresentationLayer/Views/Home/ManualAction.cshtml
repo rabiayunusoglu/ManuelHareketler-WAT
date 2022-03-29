@@ -66,20 +66,21 @@
                                         <div class="float-right" style="padding-top:20px;">
                                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
 
-                                                <label class="btn btn-dark " ng-click="fetchData()">
+                                                <label class="btn btn-outline-dark " ng-click="fetchData()">
                                                     <input type="radio" name="options" id="option_a4"> Tümünü Getir
                                                 </label>
-                                                <label class="btn btn-secondary " ng-click="Export()">
+                                                <label class="btn btn-outline-secondary " ng-click="Export()">
                                                     <input type="radio" name="options" id="option_a3"> Excel Aktar
                                                 </label>
-                                                <label class="btn btn-dark " ng-click="fetchDataByDate()">
+                                                <label class="btn btn-outline-info " ng-click="fetchDataByDate()">
                                                     <input type="radio" name="options" id="option_a1"> Getir
                                                 </label>
-                                                <label class="btn btn-secondary " ng-click="ExportByDate()">
+                                                <label class="btn btn-outline-secondary " ng-click="ExportByDate()">
                                                     <input type="radio" name="options" id="option_a2"> Excel Aktar
                                                 </label>
-                                                <label class="btn btn-dark " ng-click="">
-                                                    <input type="radio" name="options" id="option_a2"> Tamamlananları Göster
+                                                <label class="btn btn-outline-success " ng-click="toogleForFinishButton=!toogleForFinishButton">
+                                                    <input type="radio" name="options" id="option_a2"> 
+                                                    <span ng-bind="toogleForFinishButton ? 'Tamamlananları Gösterme' : 'Tamamlananları Göster'"></span>
                                                 </label>
                                             </div>
 
@@ -224,7 +225,7 @@
                                             </tr>
                                         </thead>
                                         <tbody ng-repeat="i in manualActionList| orderBy: sortColumn: reverse | limitTo: itemsPerPage: (currentPage - 1) * itemsPerPage  |filter:searchText">
-                                            <tr ng-if="i.statusType==3" style="background: #B4DE86 ">
+                                            <tr ng-if="i.statusType==3 && toogleForFinishButton" style="background: #B4DE86 ">
                                                 <td>
                                                     {{i.id}}
                                                 </td>

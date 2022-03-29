@@ -16,6 +16,7 @@ namespace ManualAction.BusinessLayer.IManagers
         ManualActionDTO CreateManager(ManualActionDTO manager);
         ManualActionDTO UpdateManager(ManualActionDTO manager);
         bool DeleteManager(System.Guid id);
+        bool DeleteManagerByDate(string sortDate);
         int GetCount(int statusType);
         int GetCountByRegNo(string regNo,int statusType);
         bool RedirectManager(ManualActionDTO manager,int depNo,string username);

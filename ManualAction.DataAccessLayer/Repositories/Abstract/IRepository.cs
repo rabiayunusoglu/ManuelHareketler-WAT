@@ -14,5 +14,6 @@ namespace ManualAction.DataAccessLayer.Repositories.Abstract
         TEntity Add(TEntity entity);
         bool Remove(System.Guid id);
         TEntity Update(TEntity entity);
+        bool Clear(List<TEntity> dbSetg);
     }
 }

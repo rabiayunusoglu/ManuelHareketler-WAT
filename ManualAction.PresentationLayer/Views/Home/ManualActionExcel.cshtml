@@ -21,7 +21,7 @@
 </div>
 <!-- /.content-header -->
 <!-- Main content -->
-<div class="content" ng-app="app" ng-controller="excelManualActionCtrl">
+<div class="content" ng-app="app" ng-controller="excelManualActionCtrl" ng-init="fetchData()">
     <div class="container-fluid">
         <section class="content">
             <div class="container-fluid">
@@ -82,10 +82,10 @@
                             <div class="card-footer">
                                 <center>
 
-                                    <input class="btn btn-dark" type="submit" name="Submit" ng-click="" value="Sil" />
+                                    <input class="btn btn-dark" type="submit" name="Submit" ng-click="deleteData()" value="Sil" />
                                 </center>
                             </div>
-                            <div class="overlay dark" ng-if="!uploading">
+                            <div class="overlay dark" ng-if="!uploading1">
                                 <i class="fas fa-2x fa-sync-alt fa-spin"></i>
                             </div>
                         </div>

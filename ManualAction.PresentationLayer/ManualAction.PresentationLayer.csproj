@@ -153,7 +153,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Chart.css" />
     <Content Include="Content\Chart.min.css" />
-    <Content Include="Content\Images\user.jpg" />
+    <Content Include="Content\Images\user.png" />
     <Content Include="Content\login.css" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
