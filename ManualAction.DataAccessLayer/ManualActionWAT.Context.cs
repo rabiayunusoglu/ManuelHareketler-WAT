@@ -25,11 +25,11 @@ namespace ManualAction.DataAccessLayer
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<ActionHistory> ActionHistory { get; set; }
         public virtual DbSet<ManualActionReason> ManualActionReason { get; set; }
         public virtual DbSet<Department> Department { get; set; }
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<UserList> UserList { get; set; }
         public virtual DbSet<ManualAction> ManualActions { get; set; }
+        public virtual DbSet<ActionHistory> ActionHistories { get; set; }
     }
 }

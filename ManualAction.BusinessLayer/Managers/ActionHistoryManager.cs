@@ -34,6 +34,7 @@ namespace ManualAction.BusinessLayer.Managers
             value.receiverTeam = manager.receiverTeam;
             value.redirectedText = manager.redirectedText;
             value.redirectedDate = Convert.ToDateTime(manager.redirectedDate);
+            value.registerDate = manager.registerDate;
             ActionHistory recordValue = _unitOfWork.ActionHistoryRepository.Add(value);
 
             ActionHistoryDTO returnValue = new ActionHistoryDTO()
@@ -46,6 +47,7 @@ namespace ManualAction.BusinessLayer.Managers
                 receiverTeam = recordValue.receiverTeam,
                 redirectedText = recordValue.redirectedText,
                 redirectedDate = recordValue.redirectedDate.ToString(),
+                registerDate = recordValue.registerDate,
             };
             if (_unitOfWork.Complete() > 0)
                 return returnValue;
@@ -86,6 +88,7 @@ namespace ManualAction.BusinessLayer.Managers
                     receiverTeam = recordValue.receiverTeam,
                     redirectedText = recordValue.redirectedText,
                     redirectedDate = recordValue.redirectedDate.ToString(),
+                    registerDate = recordValue.registerDate,
                 };
                 list.Add(returnValue);
 
@@ -95,7 +98,7 @@ namespace ManualAction.BusinessLayer.Managers
         }
         public List<ActionHistoryDTO> GetAllManagerByManualID(string id)
         {
-            List<ActionHistory> managerList = _unitOfWork.ActionHistoryRepository.GetAll().OrderBy(t=>t.redirectedDate).ToList();
+            List<ActionHistory> managerList = _unitOfWork.ActionHistoryRepository.GetAll().OrderBy(t => t.redirectedDate).ToList();
             List<ActionHistoryDTO> list = new List<ActionHistoryDTO>();
             if (managerList == null)
             {
@@ -114,6 +117,7 @@ namespace ManualAction.BusinessLayer.Managers
                     receiverTeam = recordValue.receiverTeam,
                     redirectedText = recordValue.redirectedText,
                     redirectedDate = recordValue.redirectedDate.ToString(),
+                    registerDate = recordValue.registerDate,
                 };
                 list.Add(returnValue);
 
@@ -139,6 +143,7 @@ namespace ManualAction.BusinessLayer.Managers
                 receiverTeam = recordValue.receiverTeam,
                 redirectedText = recordValue.redirectedText,
                 redirectedDate = recordValue.redirectedDate.ToString(),
+                registerDate = recordValue.registerDate,
             };
             return returnValue;
         }
@@ -158,6 +163,7 @@ namespace ManualAction.BusinessLayer.Managers
             value.receiverTeam = manager.receiverTeam;
             value.redirectedText = manager.redirectedText;
             value.redirectedDate = Convert.ToDateTime(manager.redirectedDate);
+            value.registerDate = manager.registerDate;
             ActionHistory recordValue = _unitOfWork.ActionHistoryRepository.Update(value);
 
             ActionHistoryDTO returnValue = new ActionHistoryDTO()
@@ -170,6 +176,7 @@ namespace ManualAction.BusinessLayer.Managers
                 receiverTeam = recordValue.receiverTeam,
                 redirectedText = recordValue.redirectedText,
                 redirectedDate = recordValue.redirectedDate.ToString(),
+                registerDate = recordValue.registerDate,
             };
             if (_unitOfWork.Complete() > 0)
                 return returnValue;

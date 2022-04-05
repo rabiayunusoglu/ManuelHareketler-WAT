@@ -5,12 +5,12 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="adad826344104258a6c7ea3933978d1a" Name="Diagram1">
-        <EntityTypeShape EntityType="ManualActionsDBModel.ActionHistory" Width="1.5" PointX="6.125" PointY="3.625" IsExpanded="true" />
         <EntityTypeShape EntityType="ManualActionsDBModel.ManualActionReason" Width="3.25" PointX="4.5" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="ManualActionsDBModel.Department" Width="1.5" PointX="4.5" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ManualActionsDBModel.Status" Width="1.5" PointX="6.125" PointY="0.5" />
         <EntityTypeShape EntityType="ManualActionsDBModel.UserList" Width="1.5" PointX="4.5" PointY="3.625" />
         <EntityTypeShape EntityType="ManualActionsDBModel.ManualAction" Width="1.5" PointX="2.875" PointY="0.5" />
+        <EntityTypeShape EntityType="ManualActionsDBModel.ActionHistory" Width="1.5" PointX="6.125" PointY="3.625" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

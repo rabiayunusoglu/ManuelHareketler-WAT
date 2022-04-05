@@ -314,20 +314,27 @@ namespace ManualAction.BusinessLayer.Managers
             if (sortDate == null || sortDate.Length == 0)
                 return false;
             List<ManualAction.DataAccessLayer.ManualAction> managerList = new List<ManualAction.DataAccessLayer.ManualAction>();
+            List<ActionHistory> historyList = new List<ActionHistory>();
             if (sortDate.Substring(sortDate.Length - 1) == "-")
             {
                 managerList = _unitOfWork.ManualActionRepository.GetAll().OrderBy(x => x.registerDate).Where(recordValue => recordValue.registerDate.Value.Year.ToString() == sortDate.Substring(0, 4)).ToList();
+                historyList = _unitOfWork.ActionHistoryRepository.GetAll().OrderBy(x => x.registerDate).Where(recordValue => recordValue.registerDate.Substring(0,4) == sortDate.Substring(0, 4)).ToList();
             }
             else
             {
                 managerList = _unitOfWork.ManualActionRepository.GetAll().OrderBy(x => x.registerDate).Where(recordValue => recordValue.registerDate.Value.Month < 10 ? recordValue.registerDate.Value.Year.ToString() + 0 + recordValue.registerDate.Value.Month.ToString() == sortDate : recordValue.registerDate.Value.Year.ToString() + recordValue.registerDate.Value.Month.ToString() == sortDate).ToList();
+                historyList = _unitOfWork.ActionHistoryRepository.GetAll().OrderBy(x => x.registerDate).Where(recordValue => recordValue.registerDate == sortDate).ToList();
             }
             if (managerList.Count == 0)
                 return false;
             var e = _unitOfWork.ManualActionRepository.Clear(managerList);
             if (_unitOfWork.Complete() > 0)
             {
-                return true;
+                var t = _unitOfWork.ActionHistoryRepository.Clear(historyList);
+                if (_unitOfWork.Complete() > 0)
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -449,6 +456,7 @@ namespace ManualAction.BusinessLayer.Managers
             actionHistory.receiverUser = manager.redirectedUser;
             actionHistory.redirectedText = manager.redirectedText;
             actionHistory.redirectedDate = DateTime.Now.ToString();
+            actionHistory.registerDate = manager.sortingDate;
             ActionHistoryManager actionHistoryManager = new ActionHistoryManager();
             ActionHistoryDTO historyDTO = actionHistoryManager.CreateManager(actionHistory);
             if (historyDTO == null)

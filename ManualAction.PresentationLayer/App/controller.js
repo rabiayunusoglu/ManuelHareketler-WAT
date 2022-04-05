@@ -91,12 +91,10 @@
                 });
                 $scope.$watch('searchText3', function (term) {
                     $scope.filterListStartedList = $filter('filter')($scope.startedList, term);
-                    console.log($scope.filterListStartedList)
                     $scope.calculateCountsStartedList();
                 });
                 $scope.$watch('searchText2', function (term) {
                     $scope.filterListNoStartedList = $filter('filter')($scope.noStartedList, term);
-                    console.log($scope.filterListNoStartedList)
                     $scope.calculateCountsNoStartedList();
                 });
             }, function () {
@@ -416,12 +414,15 @@
 
         //redirect and complete actions 
         $scope.TotalRedirected = async function (item, type) {
+            var list = [];
             if (type == 0)
-                var list = $scope.manualActionList.filter(x => x.statusType != 3 && x._checked == true);
+                list =$scope.manualActionList.filter(x => x.statusType != 3 && x._checked == true);
             else if (type == 1)
-                var list = $scope.noStartedList.filter(x => x._checked == true);
+                list =$scope.noStartedList.filter(x => x._checked == true);
             else if (type == 2)
-                var list = $scope.startedList.filter(x => x._checked == true);
+                list = $scope.startedList.filter(x => x._checked == true);
+            console.log(list);
+            console.log(type);
             if (list == null || list.length == 0) {
                 toastr.warning("Seçim yapınız.")
                 return;

@@ -22,5 +22,6 @@ namespace ManualAction.DataAccessLayer
         public string receiverTeam { get; set; }
         public string redirectedText { get; set; }
         public System.DateTime redirectedDate { get; set; }
+        public string registerDate { get; set; }
     }
 }

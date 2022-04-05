@@ -16,5 +16,6 @@ namespace ManualAction.BusinessLayer.DTO
         public string receiverTeam { get; set; }
         public string redirectedText { get; set; }
         public string redirectedDate { get; set; }
+        public string registerDate { get; set; }
     }
 }

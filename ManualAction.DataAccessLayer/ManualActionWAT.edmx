@@ -17,6 +17,7 @@
           <Property Name="receiverTeam" Type="text" Nullable="false" />
           <Property Name="redirectedText" Type="text" />
           <Property Name="redirectedDate" Type="datetime" Nullable="false" />
+          <Property Name="registerDate" Type="varchar" MaxLength="6" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'ManualActionsDB.dbo.Department' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -120,19 +121,6 @@ warning 6002: The table/view 'ManualActionsDB.dbo.UserList' does not have a prim
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ManualActionsDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="ActionHistory">
-          <Key>
-            <PropertyRef Name="historyID" />
-          </Key>
-          <Property Name="historyID" Type="Guid" Nullable="false" />
-          <Property Name="manualActionID" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="senderUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="senderTeam" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="receiverUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="receiverTeam" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="redirectedText" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="redirectedDate" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         <EntityType Name="ManualActionReason">
           <Key>
             <PropertyRef Name="reasonID" />
@@ -149,12 +137,12 @@ warning 6002: The table/view 'ManualActionsDB.dbo.UserList' does not have a prim
           <Property Name="departmentName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityContainer Name="ManualActionsDBEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="ActionHistory" EntityType="Self.ActionHistory" />
           <EntitySet Name="ManualActionReason" EntityType="Self.ManualActionReason" />
           <EntitySet Name="Department" EntityType="Self.Department" />
           <EntitySet Name="Status" EntityType="ManualActionsDBModel.Status" />
           <EntitySet Name="UserList" EntityType="ManualActionsDBModel.UserList" />
           <EntitySet Name="ManualActions" EntityType="ManualActionsDBModel.ManualAction" />
+          <EntitySet Name="ActionHistories" EntityType="ManualActionsDBModel.ActionHistory" />
         </EntityContainer>
         <EntityType Name="Status">
           <Key>
@@ -214,26 +202,26 @@ warning 6002: The table/view 'ManualActionsDB.dbo.UserList' does not have a prim
           <Property Name="redirectedText" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="redirectedDate" Type="DateTime" Precision="3" />
         </EntityType>
+        <EntityType Name="ActionHistory">
+          <Key>
+            <PropertyRef Name="historyID" />
+          </Key>
+          <Property Name="historyID" Type="Guid" Nullable="false" />
+          <Property Name="manualActionID" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="senderUser" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="senderTeam" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="receiverUser" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="receiverTeam" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="redirectedText" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="redirectedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="registerDate" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ManualActionsDBModelStoreContainer" CdmEntityContainer="ManualActionsDBEntities">
-          <EntitySetMapping Name="ActionHistory">
-            <EntityTypeMapping TypeName="ManualActionsDBModel.ActionHistory">
-              <MappingFragment StoreEntitySet="ActionHistory">
-                <ScalarProperty Name="historyID" ColumnName="historyID" />
-                <ScalarProperty Name="manualActionID" ColumnName="manualActionID" />
-                <ScalarProperty Name="senderUser" ColumnName="senderUser" />
-                <ScalarProperty Name="senderTeam" ColumnName="senderTeam" />
-                <ScalarProperty Name="receiverUser" ColumnName="receiverUser" />
-                <ScalarProperty Name="receiverTeam" ColumnName="receiverTeam" />
-                <ScalarProperty Name="redirectedText" ColumnName="redirectedText" />
-                <ScalarProperty Name="redirectedDate" ColumnName="redirectedDate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ManualActionReason">
             <EntityTypeMapping TypeName="ManualActionsDBModel.ManualActionReason">
               <MappingFragment StoreEntitySet="ManualActionReason">
@@ -304,6 +292,21 @@ warning 6002: The table/view 'ManualActionsDB.dbo.UserList' does not have a prim
                 <ScalarProperty Name="HTU" ColumnName="HTU" />
                 <ScalarProperty Name="UY" ColumnName="UY" />
                 <ScalarProperty Name="manualActionID" ColumnName="manualActionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ActionHistories">
+            <EntityTypeMapping TypeName="ManualActionsDBModel.ActionHistory">
+              <MappingFragment StoreEntitySet="ActionHistory">
+                <ScalarProperty Name="registerDate" ColumnName="registerDate" />
+                <ScalarProperty Name="redirectedDate" ColumnName="redirectedDate" />
+                <ScalarProperty Name="redirectedText" ColumnName="redirectedText" />
+                <ScalarProperty Name="receiverTeam" ColumnName="receiverTeam" />
+                <ScalarProperty Name="receiverUser" ColumnName="receiverUser" />
+                <ScalarProperty Name="senderTeam" ColumnName="senderTeam" />
+                <ScalarProperty Name="senderUser" ColumnName="senderUser" />
+                <ScalarProperty Name="manualActionID" ColumnName="manualActionID" />
+                <ScalarProperty Name="historyID" ColumnName="historyID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
