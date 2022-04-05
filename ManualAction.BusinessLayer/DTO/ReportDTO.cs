@@ -10,6 +10,7 @@ namespace ManualAction.BusinessLayer.DTO
     {
 
         public Nullable<decimal> sumAmount { get; set; }
+        public Nullable<decimal> sumAmountInverse { get; set; }
         public string actionReason { get; set; }
         public string productYear { get; set; }
         public string sortingDate { get; set; }

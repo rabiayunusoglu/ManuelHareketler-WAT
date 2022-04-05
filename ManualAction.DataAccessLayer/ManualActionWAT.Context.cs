@@ -30,6 +30,6 @@ namespace ManualAction.DataAccessLayer
         public virtual DbSet<Department> Department { get; set; }
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<UserList> UserList { get; set; }
-        public virtual DbSet<ManualAction> ManualAction { get; set; }
+        public virtual DbSet<ManualAction> ManualActions { get; set; }
     }
 }

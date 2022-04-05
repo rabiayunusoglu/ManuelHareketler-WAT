@@ -46,8 +46,39 @@
                         <div class="tab-content" id="custom-tabs-one-tabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1l">
                                 <div class="row">
-                                    <div class="col-lg-6">
+
+                                    <div class="col-lg-3" style="padding-top:20px;">
+
+                                        <div class="float-lg-none">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" ng-model="searchText" style="font-weight: normal" placeholder="Ara..." />
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-5" style="padding-top:20px;">
                                         <div class="float-left">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                <label class="btn btn-outline-warning " data-toggle="modal" data-target="#modal-SelectedRedirected" ng-click="toogleRedirected([])">
+                                                    <input type="radio" name="options">Seçilenleri Yönlendir
+                                                </label>
+                                                <label class="btn btn-outline-success " data-toggle="modal" data-target="#modal-SelectedFinished" ng-click="toogleFinished([])">
+                                                    <input type="radio" name="options"> Seçilenleri Tamamla
+                                                </label>
+                                                <label class="btn btn-outline-dark " ng-click="ToggleFinishButton()">
+                                                    <input type="radio" name="options" id="option_a2">
+                                                    Tamamlananları : <span ng-bind="toogleForFinishButton ? ' Gösterme' : ' Göster'"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="float-lg-right">
                                             <div class="input-group">
                                                 <label class="input">
                                                     Başlangıç:
@@ -57,72 +88,79 @@
                                                     Bitiş:
                                                     <input id="data-endDate" type="date" class="form-control" name="name" ng-value="endDate" />
                                                 </label>
+                                                <label class="input">
+
+                                                </label>
+                                                <label class="input">
+                                                    Sayfa:
+                                                    <select class="form-control" ng-model="itemsPerPage" style="font-weight: normal">
+                                                        <option ng-value="10">10</option>
+                                                        <option ng-value="25">25</option>
+                                                        <option ng-value="50">50</option>
+                                                        <option ng-value="100">100</option>
+                                                        <option ng-value="200">200</option>
+                                                    </select>
+                                                </label>
                                             </div>
                                         </div>
 
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="float-left">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                <label class="btn btn-dark " ng-click="chosenFilterActions()">
+                                                    <input type="radio" name="options" id="option_a2">
+                                                    <span ng-bind="chosefilterAction ? 'Tümünü Seç' : 'Tümünü Seçme'"></span>
+                                                    <span>- {{selectableTotalCount}} adet</span>
+                                                </label>
+                                                <label class="btn btn-default">
+                                                    <input type="radio" name="options">Seçilebilir: {{totalCount}}
+                                                </label>
+                                                <label class="btn btn-default">
+                                                    <input type="radio" name="options">Seçilen:{{selectedCount}}
+                                                </label>
+                                                <label class="btn btn-default">
+                                                    <input type="radio" name="options">Kalan:{{totalCount-selectedCount}}
+                                                </label>
+                                            </div>
+
+                                        </div>
 
                                     </div>
-                                    <div class="col-lg-6">
-                                        <div class="float-right" style="padding-top:20px;">
+                                    <div class="col-lg-3">
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <div class="float-right">
                                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-
+                                                <label class="btn btn-outline-info " ng-click="fetchDataByDate()">
+                                                    <input type="radio" name="options" id="option_a1"> Getir
+                                                </label>
+                                                <label class="btn btn-outline-secondary " ng-click="ExportByDate()">
+                                                    <input type="radio" name="options" id="option_a3"> Excel Aktar
+                                                </label>
                                                 <label class="btn btn-outline-dark " ng-click="fetchData()">
                                                     <input type="radio" name="options" id="option_a4"> Tümünü Getir
                                                 </label>
                                                 <label class="btn btn-outline-secondary " ng-click="Export()">
                                                     <input type="radio" name="options" id="option_a3"> Excel Aktar
                                                 </label>
-                                                <label class="btn btn-outline-info " ng-click="fetchDataByDate()">
-                                                    <input type="radio" name="options" id="option_a1"> Getir
-                                                </label>
-                                                <label class="btn btn-outline-secondary " ng-click="ExportByDate()">
-                                                    <input type="radio" name="options" id="option_a2"> Excel Aktar
-                                                </label>
-                                                <label class="btn btn-outline-success " ng-click="toogleForFinishButton=!toogleForFinishButton">
-                                                    <input type="radio" name="options" id="option_a2">
-                                                    <span ng-bind="toogleForFinishButton ? 'Tamamlananları Gösterme' : 'Tamamlananları Göster'"></span>
-                                                </label>
                                             </div>
 
                                         </div>
 
-
                                     </div>
-
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="float-lg-left">
-                                            <div class="input-group mb-4">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
-                                                </div>
-                                                <input type="text" class="form-control" ng-model="searchText" style="font-weight: normal" placeholder="Ara..." />
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="float-lg-right">
-                                            Sayfa
-                                            <label>
-                                                <select class="form-control" ng-model="itemsPerPage" style="font-weight: normal">
-                                                    <option ng-value="2">2</option>
-                                                    <option ng-value="5">5</option>
-                                                    <option ng-value="10">10</option>
-                                                    <option ng-value="25">25</option>
-                                                    <option ng-value="50">50</option>
-                                                </select>
-                                            </label>
-                                        </div>
-
-                                    </div>
-
-                                </div>
+                                <br />
                                 <div class="table-responsive">
                                     <table class="table table-hover table-head-fixed text-wrap ">
                                         <thead>
                                             <tr>
+                                                <th>
+                                                    #
+                                                </th>
                                                 <th ng-click="sortBy('id')">
                                                     Sıra No
                                                     <span class="glyphicon" ng-show="sortColumn=='id'" ng-class="{'glyphicon-triangle-top': !reverse, 'glyphicon-triangle-bottom': reverse}"></span>
@@ -224,6 +262,7 @@
                                         </thead>
                                         <tbody ng-repeat="i in manualActionList| orderBy: sortColumn: reverse | limitTo: itemsPerPage: (currentPage - 1) * itemsPerPage  |filter:searchText">
                                             <tr ng-if="i.statusType==3 && toogleForFinishButton" style="background: #B4DE86 ">
+                                                <td></td>
                                                 <td>
                                                     {{i.id}}
                                                 </td>
@@ -301,6 +340,11 @@
                                             </tr>
                                             <tr ng-if="i.statusType==1">
                                                 <td>
+                                                    <center>
+                                                        <input class="checkbox" style=" width: 30px; height: 30px;" type="checkbox" ng-click="setCheckBoxByItem(i)" ng-model="i._checked" data-toggle="modal" data-target="#basicModal">
+                                                    </center>
+                                                </td>
+                                                <td>
                                                     {{i.id}}
                                                 </td>
                                                 <td>
@@ -375,6 +419,11 @@
                                                 </td>
                                             </tr>
                                             <tr ng-if="i.statusType==2" style="background: #FFE699 ">
+                                                <td>
+                                                    <center>
+                                                        <input class="checkbox" style=" width: 30px; height: 30px;" type="checkbox" ng-click="setCheckBoxByItem(i)" ng-model="i._checked" data-toggle="modal" data-target="#basicModal">
+                                                    </center>
+                                                </td>
                                                 <td>
                                                     {{i.id}}
                                                 </td>
@@ -466,28 +515,33 @@
                             </div>
                             <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2l">
                                 <div class="row">
-                                    <div class="col-lg-2">
+                                    <div class="col-lg-4">
 
-                                        <div class="input-group mb-4">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                        <div class="float-lg-none">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" ng-model="searchText2" style="font-weight: normal" placeholder="Ara..." />
+
+
                                             </div>
-                                            <input type="text" class="form-control" ng-model="searchText2" style="font-weight: normal" placeholder="Ara..." />
                                         </div>
 
                                     </div>
+                                    
 
-                                    <div class="col-lg-10">
+                                    <div class="col-lg-8">
                                         <div class="float-right">
 
                                             Sayfa
                                             <label>
                                                 <select class="form-control" ng-model="itemsPerPage2" style="font-weight: normal">
-                                                    <option ng-value="2">2</option>
-                                                    <option ng-value="5">5</option>
                                                     <option ng-value="10">10</option>
                                                     <option ng-value="25">25</option>
                                                     <option ng-value="50">50</option>
+                                                    <option ng-value="100">100</option>
+                                                    <option ng-value="200">200</option>
                                                 </select>
                                             </label>
 
@@ -495,10 +549,50 @@
                                     </div>
 
                                 </div>
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="float-left">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                <label class="btn btn-dark " ng-click="chosenFilterActionsNoStarted()">
+                                                    <input type="radio" name="options" id="option_a2">
+                                                    <span ng-bind="chosefilterAction ? 'Tümünü Seç' : 'Tümünü Seçme'"></span>
+                                                    <span>- {{selectableTotalCountNoStartedList}} adet</span>
+                                                </label>
+                                                <label class="btn btn-default">
+                                                    <input type="radio" name="options">Seçilebilir: {{totalCountNoStartedList}}
+                                                </label>
+                                                <label class="btn btn-default">
+                                                    <input type="radio" name="options">Seçilen:{{selectedCountNoStartedList}}
+                                                </label>
+                                                <label class="btn btn-default">
+                                                    <input type="radio" name="options">Kalan:{{totalCountNoStartedList-selectedCountNoStartedList}}
+                                                </label>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <div class="float-right">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                <label class="btn btn-outline-warning " data-toggle="modal" data-target="#modal-SelectedRedirectedStartedList" ng-click="toogleRedirected([])">
+                                                    <input type="radio" name="options">Seçilenleri Yönlendir
+                                                </label>
+                                                <label class="btn btn-outline-success " data-toggle="modal" data-target="#modal-SelectedFinishedStartedList" ng-click="toogleFinished([])">
+                                                    <input type="radio" name="options"> Seçilenleri Tamamla
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
                                 <div class="table-responsive">
                                     <table class="table table-hover table-head-fixed text-wrap ">
                                         <thead>
                                             <tr>
+                                                <th>
+                                                    #
+                                                </th>
                                                 <th ng-click="sortBy2('id')">
                                                     Sıra No
                                                     <span class="glyphicon" ng-show="sortColumn2=='id'" ng-class="{'glyphicon-triangle-top': !reverse2, 'glyphicon-triangle-bottom': reverse2}"></span>
@@ -599,6 +693,11 @@
                                         <tbody ng-repeat="j in noStartedList| orderBy: sortColumn2: reverse2 | limitTo: itemsPerPage2: (currentPage2 - 1) * itemsPerPage2  |filter:searchText2">
                                             <tr>
                                                 <td>
+                                                    <center>
+                                                        <input class="checkbox" style=" width: 30px; height: 30px;" type="checkbox" ng-click="setCheckBoxByItemNoStarted(j)" ng-model="j._checked" data-toggle="modal" data-target="#basicModal">
+                                                    </center>
+                                                </td>
+                                                <td>
                                                     {{j.id}}
                                                 </td>
                                                 <td>
@@ -690,28 +789,33 @@
                             </div>
                             <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3l">
                                 <div class="row">
-                                    <div class="col-lg-2">
+                                    <div class="col-lg-4">
 
-                                        <div class="input-group mb-4">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                        <div class="float-lg-none">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" ng-model="searchText3" style="font-weight: normal" placeholder="Ara..." />
+
+
                                             </div>
-                                            <input type="text" class="form-control" ng-model="searchText3" style="font-weight: normal" placeholder="Ara..." />
                                         </div>
 
                                     </div>
+                                   
 
-                                    <div class="col-lg-10">
+                                    <div class="col-lg-8">
                                         <div class="float-right">
 
                                             Sayfa
                                             <label>
                                                 <select class="form-control" ng-model="itemsPerPage3" style="font-weight: normal">
-                                                    <option ng-value="2">2</option>
-                                                    <option ng-value="5">5</option>
                                                     <option ng-value="10">10</option>
                                                     <option ng-value="25">25</option>
                                                     <option ng-value="50">50</option>
+                                                    <option ng-value="100">100</option>
+                                                    <option ng-value="200">200</option>
                                                 </select>
                                             </label>
 
@@ -719,10 +823,50 @@
                                     </div>
 
                                 </div>
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="float-left">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                <label class="btn btn-dark " ng-click="chosenFilterActionsStarted()">
+                                                    <input type="radio" name="options" id="option_a2">
+                                                    <span ng-bind="chosefilterAction ? 'Tümünü Seç' : 'Tümünü Seçme'"></span>
+                                                    <span>- {{selectableTotalCountStartedList}} adet</span>
+                                                </label>
+                                                <label class="btn btn-default">
+                                                    <input type="radio" name="options">Seçilebilir: {{totalCountStartedList}}
+                                                </label>
+                                                <label class="btn btn-default">
+                                                    <input type="radio" name="options">Seçilen:{{selectedCountStartedList}}
+                                                </label>
+                                                <label class="btn btn-default">
+                                                    <input type="radio" name="options">Kalan:{{totalCountStartedList-selectedCountStartedList}}
+                                                </label>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <div class="float-right">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                <label class="btn btn-outline-warning " data-toggle="modal" data-target="#modal-SelectedRedirectedStartedList" ng-click="toogleRedirected([])">
+                                                    <input type="radio" name="options">Seçilenleri Yönlendir
+                                                </label>
+                                                <label class="btn btn-outline-success " data-toggle="modal" data-target="#modal-SelectedFinishedStartedList" ng-click="toogleFinished([])">
+                                                    <input type="radio" name="options"> Seçilenleri Tamamla
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
                                 <div class="table-responsive">
                                     <table class="table table-hover table-head-fixed text-wrap ">
                                         <thead>
                                             <tr>
+                                                <th>
+                                                    #
+                                                </th>
                                                 <th ng-click="sortBy3('id')">
                                                     Sıra No
                                                     <span class="glyphicon" ng-show="sortColumn3=='id'" ng-class="{'glyphicon-triangle-top': !reverse3, 'glyphicon-triangle-bottom': reverse3}"></span>
@@ -823,6 +967,12 @@
                                         <tbody ng-repeat="k in startedList| orderBy: sortColumn3: reverse3 | limitTo: itemsPerPage3: (currentPage3 - 1) * itemsPerPage3  |filter:searchText3">
                                             <tr ng-if="k.statusType==2" style="background: #FFE699 ">
                                                 <td>
+                                                    <center>
+                                                        <input class="checkbox" style=" width: 30px; height: 30px;" type="checkbox" ng-click="setCheckBoxByItemStarted(k)" ng-model="k._checked" data-toggle="modal" data-target="#basicModal">
+                                                    </center>
+
+                                                </td>
+                                                <td>
                                                     {{k.id}}
                                                 </td>
                                                 <td>
@@ -897,7 +1047,7 @@
                                                 </td>
 
                                             </tr>
-                                            <tr ng-if="!startedList || startedList.length == 0">
+                                            <tr ng-if="startedList.length == 0">
                                                 <td colspan="17" style="text-align:center">
                                                     <h3>Tablo Boş <i class="fa fa-ban" style="color:red"></i></h3>
                                                 </td>
@@ -930,11 +1080,11 @@
                                             Sayfa
                                             <label>
                                                 <select class="form-control" ng-model="itemsPerPage4" style="font-weight: normal">
-                                                    <option ng-value="2">2</option>
-                                                    <option ng-value="5">5</option>
                                                     <option ng-value="10">10</option>
                                                     <option ng-value="25">25</option>
                                                     <option ng-value="50">50</option>
+                                                    <option ng-value="100">100</option>
+                                                    <option ng-value="200">200</option>
                                                 </select>
                                             </label>
 
@@ -1400,6 +1550,12 @@
                                             </div>
                                             <div class="form-group ">
                                                 <div class="row">
+                                                    <label class="col-lg-2 control-label"></label>
+                                                    <div class="col-lg-10">
+                                                        <p style="color:red">*** MİY: Backlog Temizleme, Tamir Kaynaklı ve Teyit Düzeltme için lütfen detaylı bir açıklama giriniz.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
                                                     <label class="col-lg-2 control-label">Açıklama:</label>
                                                     <div class="col-lg-10">
                                                         <input type="text" class="form-control" name="name" ng-model="finishItem.reasonDetail" />
@@ -1411,6 +1567,282 @@
                                     <div class="modal-footer justify-content-between">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">İptal</button>
                                         <button type="button" class="btn btn-success" ng-click="Finished(finishItem)" data-dismiss="modal">Tamamla</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+                        <!--Total Modal -->
+                        <div class="modal fade" id="modal-SelectedRedirected">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Toplu Yönlendirme</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Departman:</label>
+                                                    <div class="col-lg-4">
+                                                        <select class="form-control" ng-model="redirectItem.redirectedTeam" ng-click="fetchUser()" ng-options="x for x in departmant">
+                                                        </select>
+                                                    </div>
+                                                    <label class="col-lg-2 control-label">Sorumlu Birey:</label>
+                                                    <div class="col-lg-4">
+                                                        <select class="form-control" ng-model="redirectItem.redirectedUser" ng-options="x.username for x in userList">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Açıklama:</label>
+                                                    <div class="col-lg-10">
+                                                        <input type="text" class="form-control" name="name" ng-model="redirectItem.redirectedText" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">İptal</button>
+                                        <button type="button" class="btn btn-warning" ng-click="TotalRedirected(redirectItem,0)" data-dismiss="modal">Yönlendir</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+                        <div class="modal fade" id="modal-SelectedFinished">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Toplu Tamamlama</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Hareket Sebebi:</label>
+                                                    <div class="col-lg-10">
+                                                        <select class="form-control" ng-model="finishItem.actionReason" ng-options="x for x in reasonList">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label"></label>
+                                                    <div class="col-lg-10">
+                                                        <p style="color:red">*** MİY: Backlog Temizleme, Tamir Kaynaklı ve Teyit Düzeltme için lütfen detaylı bir açıklama giriniz.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Açıklama:</label>
+                                                    <div class="col-lg-10">
+                                                        <input type="text" class="form-control" name="name" ng-model="finishItem.reasonDetail" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">İptal</button>
+                                        <button type="button" class="btn btn-success" ng-click="TotalFinished(0)" data-dismiss="modal">Tamamla</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+                        <!--No Started List Modal -->
+                        <div class="modal fade" id="modal-SelectedRedirectedNoStartedList">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Toplu Yönlendirme</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Departman:</label>
+                                                    <div class="col-lg-4">
+                                                        <select class="form-control" ng-model="redirectItem.redirectedTeam" ng-click="fetchUser()" ng-options="x for x in departmant">
+                                                        </select>
+                                                    </div>
+                                                    <label class="col-lg-2 control-label">Sorumlu Birey:</label>
+                                                    <div class="col-lg-4">
+                                                        <select class="form-control" ng-model="redirectItem.redirectedUser" ng-options="x.username for x in userList">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Açıklama:</label>
+                                                    <div class="col-lg-10">
+                                                        <input type="text" class="form-control" name="name" ng-model="redirectItem.redirectedText" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">İptal</button>
+                                        <button type="button" class="btn btn-warning" ng-click="TotalRedirected(redirectItem,1)" data-dismiss="modal">Yönlendir</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+                        <div class="modal fade" id="modal-SelectedFinishedNoStartedList">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Toplu Tamamlama</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Hareket Sebebi:</label>
+                                                    <div class="col-lg-10">
+                                                        <select class="form-control" ng-model="finishItem.actionReason" ng-options="x for x in reasonList">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label"></label>
+                                                    <div class="col-lg-10">
+                                                        <p style="color:red">*** MİY: Backlog Temizleme, Tamir Kaynaklı ve Teyit Düzeltme için lütfen detaylı bir açıklama giriniz.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Açıklama:</label>
+                                                    <div class="col-lg-10">
+                                                        <input type="text" class="form-control" name="name" ng-model="finishItem.reasonDetail" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">İptal</button>
+                                        <button type="button" class="btn btn-success" ng-click="TotalFinished(1)" data-dismiss="modal">Tamamla</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+                        <!--Started List Modal -->
+                        <div class="modal fade" id="modal-SelectedRedirectedStartedList">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Toplu Yönlendirme</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Departman:</label>
+                                                    <div class="col-lg-4">
+                                                        <select class="form-control" ng-model="redirectItem.redirectedTeam" ng-click="fetchUser()" ng-options="x for x in departmant">
+                                                        </select>
+                                                    </div>
+                                                    <label class="col-lg-2 control-label">Sorumlu Birey:</label>
+                                                    <div class="col-lg-4">
+                                                        <select class="form-control" ng-model="redirectItem.redirectedUser" ng-options="x.username for x in userList">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Açıklama:</label>
+                                                    <div class="col-lg-10">
+                                                        <input type="text" class="form-control" name="name" ng-model="redirectItem.redirectedText" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">İptal</button>
+                                        <button type="button" class="btn btn-warning" ng-click="TotalRedirected(redirectItem,2)" data-dismiss="modal">Yönlendir</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+                        <div class="modal fade" id="modal-SelectedFinishedStartedList">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Toplu Tamamlama</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Hareket Sebebi:</label>
+                                                    <div class="col-lg-10">
+                                                        <select class="form-control" ng-model="finishItem.actionReason" ng-options="x for x in reasonList">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label"></label>
+                                                    <div class="col-lg-10">
+                                                        <p style="color:red">*** MİY: Backlog Temizleme, Tamir Kaynaklı ve Teyit Düzeltme için lütfen detaylı bir açıklama giriniz.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-lg-2 control-label">Açıklama:</label>
+                                                    <div class="col-lg-10">
+                                                        <input type="text" class="form-control" name="name" ng-model="finishItem.reasonDetail" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">İptal</button>
+                                        <button type="button" class="btn btn-success" ng-click="TotalFinished(2)" data-dismiss="modal">Tamamla</button>
                                     </div>
                                 </div>
                                 <!-- /.modal-content -->

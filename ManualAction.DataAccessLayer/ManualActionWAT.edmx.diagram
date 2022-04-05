@@ -10,7 +10,7 @@
         <EntityTypeShape EntityType="ManualActionsDBModel.Department" Width="1.5" PointX="4.5" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ManualActionsDBModel.Status" Width="1.5" PointX="6.125" PointY="0.5" />
         <EntityTypeShape EntityType="ManualActionsDBModel.UserList" Width="1.5" PointX="4.5" PointY="3.625" />
-        <EntityTypeShape EntityType="ManualActionsDBModel.ManualAction" Width="1.5" PointX="2.75" PointY="0.5" />
+        <EntityTypeShape EntityType="ManualActionsDBModel.ManualAction" Width="1.5" PointX="2.875" PointY="0.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

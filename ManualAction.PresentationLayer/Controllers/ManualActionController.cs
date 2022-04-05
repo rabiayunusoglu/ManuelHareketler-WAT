@@ -157,7 +157,7 @@ namespace ManualAction.PresentationLayer.Controllers
             try
             {
 
-                byte[] temp = manager.ExporttoExcel();
+                byte[] temp = manager.ExportDecision(1,"",DateTime.Now,DateTime.Now);
                 if (temp == null)
                     return;
                 Response.ClearContent();
@@ -179,7 +179,7 @@ namespace ManualAction.PresentationLayer.Controllers
             {
                 if (startDate == null || endDate == null)
                     return;
-                byte[] temp = manager.ExporttoExcelByDate(startDate, endDate);
+                byte[] temp = manager.ExportDecision(2,"",startDate, endDate);
                 if (temp == null)
                     return;
                 Response.ClearContent();
@@ -202,7 +202,7 @@ namespace ManualAction.PresentationLayer.Controllers
                 string regNo = HttpContext.Session["registerNo"].ToString();
                 if (regNo == null || regNo.Length == 0)
                     return;
-                byte[] temp = manager.ExporttoExcelByRegNo(regNo);
+                byte[] temp = manager.ExportDecision(3,regNo, DateTime.Now, DateTime.Now);
                 if (temp == null)
                     return;
                 Response.ClearContent();
@@ -228,7 +228,7 @@ namespace ManualAction.PresentationLayer.Controllers
                 string regNo = HttpContext.Session["registerNo"].ToString();
                 if (regNo == null || regNo.Length == 0)
                     return;
-                byte[] temp = manager.ExporttoExcelByDateRegNo(startDate, endDate, regNo);
+                byte[] temp = manager.ExportDecision(4,regNo,startDate, endDate);
                 if (temp == null)
                     return;
                 Response.ClearContent();

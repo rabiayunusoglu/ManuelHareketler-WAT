@@ -104,41 +104,6 @@ namespace ManualAction.BusinessLayer.Managers
                 return returnValue;
             return null;
         }
-        public bool DeleteManager(Guid id)
-        {
-            if (id == null)
-                return false;
-            if (_unitOfWork.ManualActionRepository.Remove(id))
-            {
-                if (_unitOfWork.Complete() > 0)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public bool DeleteManagerByDate(string sortDate)
-        {
-            if (sortDate == null || sortDate.Length == 0)
-                return false;
-            List<ManualAction.DataAccessLayer.ManualAction> managerList = new List<ManualAction.DataAccessLayer.ManualAction>();
-            if (sortDate.Substring(sortDate.Length - 1) == "-")
-            {
-                managerList = _unitOfWork.ManualActionRepository.GetAll().OrderBy(x => x.registerDate).Where(recordValue => recordValue.registerDate.Value.Year.ToString() == sortDate.Substring(0,4)).ToList();
-            }
-            else
-            {
-                managerList = _unitOfWork.ManualActionRepository.GetAll().OrderBy(x => x.registerDate).Where(recordValue => recordValue.registerDate.Value.Month < 10 ? recordValue.registerDate.Value.Year.ToString() + 0 + recordValue.registerDate.Value.Month.ToString() == sortDate : recordValue.registerDate.Value.Year.ToString() + recordValue.registerDate.Value.Month.ToString() == sortDate).ToList();
-            }
-            if (managerList.Count == 0)
-                return false;
-            var e = _unitOfWork.ManualActionRepository.Clear(managerList);
-            if (_unitOfWork.Complete() > 0)
-            {
-                return true;
-            }
-            return false;
-        }
         public List<ManualActionDTO> GetAllManager()
         {
             List<ManualAction.DataAccessLayer.ManualAction> managerList = _unitOfWork.ManualActionRepository.GetAll().OrderByDescending(x => x.registerDate).ToList();
@@ -173,7 +138,7 @@ namespace ManualAction.BusinessLayer.Managers
                     loginDateTime = recordValue.loginDateTime.Substring(recordValue.loginDateTime.Length - 8),
                     userRegisterNo = recordValue.userRegisterNo,
                     username = recordValue.username,
-                    actionReason = recordValue.actionReason,
+                    actionReason = recordValue.actionReason.Trim(),
                     reasonDetail = recordValue.reasonDetail,
                     madeDate = recordValue.madeDate,
                     madeDateText = recordValue.madeDate.ToString(),
@@ -270,7 +235,7 @@ namespace ManualAction.BusinessLayer.Managers
             value.username = manager.username;
             value.actionReason = manager.actionReason;
             value.reasonDetail = manager.reasonDetail;
-            value.madeDate = (manager.madeDate);
+            value.madeDate = manager.madeDate;
             value.statusType = manager.statusType;
             value.statusName = manager.statusName;
             value.isRedirected = manager.isRedirected;
@@ -278,7 +243,7 @@ namespace ManualAction.BusinessLayer.Managers
             value.redirectedTeam = manager.redirectedTeam;
             value.redirectedUser = manager.redirectedUser;
             value.redirectedText = manager.redirectedText;
-            value.redirectedDate = (manager.redirectedDate);
+            value.redirectedDate = null;
 
             ManualAction.DataAccessLayer.ManualAction recordValue = _unitOfWork.ManualActionRepository.Update(value);
 
@@ -319,11 +284,381 @@ namespace ManualAction.BusinessLayer.Managers
                 redirectedText = recordValue.redirectedText,
                 redirectedDate = recordValue.redirectedDate,
             };
+
             if (_unitOfWork.Complete() > 0)
                 return returnValue;
+
             return null;
         }
+        public bool DeleteManager(Guid id)
+        {
+            if (id == null)
+                return false;
+            if (_unitOfWork.ManualActionRepository.Remove(id))
+            {
+                if (_unitOfWork.Complete() > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
+        /// <summary>
+        /// It was made to delete between two dates.
+        /// </summary>
+        /// <param name="sortDate"></param>
+        /// <returns></returns>
+        public bool DeleteManagerByDate(string sortDate)
+        {
+            if (sortDate == null || sortDate.Length == 0)
+                return false;
+            List<ManualAction.DataAccessLayer.ManualAction> managerList = new List<ManualAction.DataAccessLayer.ManualAction>();
+            if (sortDate.Substring(sortDate.Length - 1) == "-")
+            {
+                managerList = _unitOfWork.ManualActionRepository.GetAll().OrderBy(x => x.registerDate).Where(recordValue => recordValue.registerDate.Value.Year.ToString() == sortDate.Substring(0, 4)).ToList();
+            }
+            else
+            {
+                managerList = _unitOfWork.ManualActionRepository.GetAll().OrderBy(x => x.registerDate).Where(recordValue => recordValue.registerDate.Value.Month < 10 ? recordValue.registerDate.Value.Year.ToString() + 0 + recordValue.registerDate.Value.Month.ToString() == sortDate : recordValue.registerDate.Value.Year.ToString() + recordValue.registerDate.Value.Month.ToString() == sortDate).ToList();
+            }
+            if (managerList.Count == 0)
+                return false;
+            var e = _unitOfWork.ManualActionRepository.Clear(managerList);
+            if (_unitOfWork.Complete() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// This method returns the count by  each statustype
+        /// </summary>
+        /// <param name="statusType"></param>
+        /// <returns></returns>
+        public int GetCount(int statusType)
+        {
+            List<ManualAction.DataAccessLayer.ManualAction> managerList = _unitOfWork.ManualActionRepository.GetAll().ToList();
+            if (managerList == null)
+            {
+                return 0;
+            }
+            int managerCount = managerList.Where(x => x.statusType == statusType).Count();
+            return managerCount;
+        }
+
+        /// <summary>
+        /// This method returns the count by each statusType and register number.
+        /// </summary>
+        /// <param name="regNo"></param>
+        /// <param name="statusType"></param>
+        /// <returns></returns>
+        public int GetCountByRegNo(string regNo, int statusType)
+        {
+            List<ManualAction.DataAccessLayer.ManualAction> managerList = _unitOfWork.ManualActionRepository.GetAll().Where(t => t.userRegisterNo == regNo).ToList();
+            if (managerList == null)
+            {
+                return 0;
+            }
+            int managerCount = managerList.Where(x => x.statusType == statusType).Count();
+            return managerCount;
+        }
+
+        /// <summary>
+        /// Return the manual action list by register number.
+        /// </summary>
+        /// <param name="regNo"></param>
+        /// <returns></returns>
+        public List<ManualActionDTO> GetManagerByRegNo(string regNo)
+        {
+            List<ManualAction.DataAccessLayer.ManualAction> managerList = _unitOfWork.ManualActionRepository.GetAll().Where(t => t.userRegisterNo == regNo).OrderByDescending(x => x.registerDate).ToList();
+            List<ManualActionDTO> list = new List<ManualActionDTO>();
+            if (managerList == null)
+            {
+                return null;
+            }
+            foreach (ManualAction.DataAccessLayer.ManualAction recordValue in managerList)
+            {
+                ManualActionDTO returnValue = new ManualActionDTO()
+                {
+                    manualActionID = recordValue.manualActionID,
+                    UY = recordValue.UY,
+                    HTU = recordValue.HTU,
+                    material = recordValue.material,
+                    materialText = recordValue.materialText,
+                    MT = recordValue.MT,
+                    amount = recordValue.amount,
+                    brm = recordValue.brm,
+                    priceBrm = recordValue.priceBrm,
+                    total = recordValue.total,
+                    DnmsMF = recordValue.DnmsMF,
+                    DnmsMFValue = recordValue.DnmsMFValue,
+                    orderValue = recordValue.orderValue,
+                    productCode = recordValue.productCode,
+                    productCodeInfo = recordValue.productCodeInfo,
+                    productYear = recordValue.productYear,
+                    registerDate = recordValue.registerDate.ToString().Substring(0, 10),
+                    sortingDate = recordValue.registerDate.Value.Month < 10 ? recordValue.registerDate.Value.Year.ToString() + 0 + recordValue.registerDate.Value.Month.ToString() : recordValue.registerDate.Value.Year.ToString() + recordValue.registerDate.Value.Month.ToString(),
+                    loginDate = recordValue.loginDate.ToString().Substring(0, 10),
+                    loginDateTime = recordValue.loginDateTime.Substring(recordValue.loginDateTime.Length - 8),
+                    userRegisterNo = recordValue.userRegisterNo,
+                    username = recordValue.username,
+                    actionReason = recordValue.actionReason,
+                    reasonDetail = recordValue.reasonDetail,
+                    madeDate = recordValue.madeDate,
+                    madeDateText = recordValue.madeDate.ToString(),
+                    statusType = recordValue.statusType,
+                    statusName = recordValue.statusName,
+                    isRedirected = recordValue.isRedirected,
+                    historyID = recordValue.historyID,
+                    redirectedTeam = recordValue.redirectedTeam,
+                    redirectedUser = recordValue.redirectedUser,
+                    redirectedText = recordValue.redirectedText,
+                    redirectedDate = recordValue.redirectedDate,
+                };
+                list.Add(returnValue);
+
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// the user performs the redirection
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="depNo"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool RedirectManager(ManualActionDTO manager, int depNo, string username)
+        {
+            if (manager == null || depNo == null || username == null)
+                return false;
+            string depName = "";
+            DepartmantManager dep = new DepartmantManager();
+            DepartmantDTO depValue = dep.GetManagerById(depNo);
+            if (depValue.departmentName == null || depValue.departmentName.Length == 0)
+                depName = "*";
+            depName = depValue.departmentName;
+            ActionHistoryDTO actionHistory = new ActionHistoryDTO();
+            actionHistory.manualActionID = manager.manualActionID.ToString();
+            actionHistory.senderUser = username;
+            actionHistory.senderTeam = depName;
+            actionHistory.receiverTeam = manager.redirectedTeam;
+            actionHistory.receiverUser = manager.redirectedUser;
+            actionHistory.redirectedText = manager.redirectedText;
+            actionHistory.redirectedDate = DateTime.Now.ToString();
+            ActionHistoryManager actionHistoryManager = new ActionHistoryManager();
+            ActionHistoryDTO historyDTO = actionHistoryManager.CreateManager(actionHistory);
+            if (historyDTO == null)
+                return false;
+            manager.statusType = 2;
+            manager.statusName = "Devam Ediyor";
+            manager.isRedirected = true;
+            manager.historyID = historyDTO.historyID.ToString();
+            manager.redirectedTeam = "";
+            manager.redirectedText = "";
+            manager.redirectedUser = "";
+            manager.redirectedDate = DateTime.Now;
+            ManualActionManager manualAction = new ManualActionManager();
+            ManualActionDTO returnValue = manualAction.UpdateManager(manager);
+            if (returnValue == null)
+                return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Export for total type is 1
+        /// Export by date for total is 2
+        /// Export for special person register no is type 3
+        /// Export for special person register no by date is type 4
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public byte[] ExportDecision(int type, string regNo, DateTime startDate, DateTime endDate)
+        {
+            List<ManualActionDTO> list = new List<ManualActionDTO>();
+            if (type == 1)
+            {
+                list = GetAllManager();
+                if (list.Count() == 0)
+                    return null;
+            }
+            else if (type == 2)
+            {
+                list = GetAllManager();
+                list = list.Where(x => Convert.ToDateTime(x.registerDate) <= endDate && Convert.ToDateTime(x.registerDate) >= startDate).ToList();
+                if (list.Count() == 0)
+                    return null;
+            }
+            else if (type == 3)
+            {
+                list = GetManagerByRegNo(regNo).ToList();
+                if (list.Count() == 0)
+                    return null;
+            }
+            else if (type == 4)
+            {
+                list = GetManagerByRegNo(regNo);
+                list = list.Where(x => Convert.ToDateTime(x.registerDate) <= endDate && Convert.ToDateTime(x.registerDate) >= startDate).ToList();
+                if (list.Count() == 0)
+                    return null;
+            }
+            byte[] result = Export(list);
+            return result;
+        }
+        public byte[] Export(List<ManualActionDTO> list)
+        {
+            if (list.Count() == 0)
+                return null;
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.Worksheets.Add("WAT-Manuel Hareketler");
+                ws.ColumnWidth = 10;
+
+                //header
+                ws.Cell(1, 1).Value = "ÜY";
+                ws.Cell(1, 2).Value = "HTü";
+                ws.Cell(1, 3).Value = "Malzeme No";
+                ws.Cell(1, 4).Value = "Malzeme Kısa Metni";
+                ws.Cell(1, 5).Value = "MT";
+                ws.Cell(1, 6).Value = "Miktar";
+                ws.Cell(1, 7).Value = "Birim";
+                ws.Cell(1, 8).Value = "Fiyat Birim";
+                ws.Cell(1, 9).Value = "Tutar";
+                ws.Cell(1, 10).Value = "Dnms.MF";
+                ws.Cell(1, 11).Value = "Dnms.MF Değeri";
+                ws.Cell(1, 12).Value = "Sipariş";
+                ws.Cell(1, 13).Value = "Malzeme";
+                ws.Cell(1, 14).Value = "Malzeme Bilgisi";
+                ws.Cell(1, 15).Value = "M.yıl";
+                ws.Cell(1, 16).Value = "Kayıt Tarihi";
+                ws.Cell(1, 17).Value = "Giriş Tarihi";
+                ws.Cell(1, 18).Value = "Saat";
+                ws.Cell(1, 19).Value = "Sorumlu Sicili";
+                ws.Cell(1, 20).Value = "Sorumlu Birey";
+                ws.Cell(1, 21).Value = "Hareket Sebebi";
+                ws.Cell(1, 22).Value = "Açıklama";
+                ws.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 4).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 6).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 7).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 8).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 9).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 10).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 11).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 12).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 15).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 16).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 17).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 18).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 19).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 20).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 21).Style.Fill.BackgroundColor = XLColor.Almond;
+                ws.Cell(1, 22).Style.Fill.BackgroundColor = XLColor.Almond;
+
+                //connect to sql here
+                System.Data.DataTable dt = new System.Data.DataTable();
+                int i = 2;
+                foreach (ManualActionDTO item in list)
+                {
+                    if (item.statusType == 2)
+                    {
+                        ws.Cell(i, 1).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 2).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 3).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 5).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 7).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 8).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 9).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 10).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 12).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 13).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 15).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 16).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                        ws.Cell(i, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 222, 117);
+                    }
+                    else if (item.statusType == 3)
+                    {
+                        ws.Cell(i, 1).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 2).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 3).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 5).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 7).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 8).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 9).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 10).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 12).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 13).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 15).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 16).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                        ws.Cell(i, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213, 101);
+                    }
+                    ws.Cell(i, 1).Value = Convert.ToString(item.UY);
+                    ws.Cell(i, 2).Value = Convert.ToString(item.HTU);
+                    ws.Cell(i, 3).Value = Convert.ToString(item.material).TrimEnd();
+                    ws.Cell(i, 4).Value = Convert.ToString(item.materialText);
+                    ws.Cell(i, 5).Value = Convert.ToString(item.MT);
+                    ws.Cell(i, 6).Value = Convert.ToDecimal(item.amount);
+                    ws.Cell(i, 7).Value = Convert.ToString(item.brm);
+                    ws.Cell(i, 8).Value = Convert.ToString(item.priceBrm);
+                    ws.Cell(i, 9).Value = Convert.ToDecimal(item.total);
+                    ws.Cell(i, 10).Value = Convert.ToDecimal(item.DnmsMF);
+                    ws.Cell(i, 11).Value = Convert.ToDecimal(item.DnmsMFValue);
+                    ws.Cell(i, 12).Value = Convert.ToString(item.orderValue).TrimEnd();
+                    ws.Cell(i, 13).Value = Convert.ToString(item.productCode).TrimEnd();
+                    ws.Cell(i, 14).Value = Convert.ToString(item.productCodeInfo);
+                    ws.Cell(i, 15).Value = Convert.ToString(item.productYear);
+                    ws.Cell(i, 16).Value = Convert.ToString(item.registerDate);
+                    ws.Cell(i, 17).Value = Convert.ToString(item.loginDate);
+                    ws.Cell(i, 18).Value = Convert.ToString(item.loginDateTime);
+                    ws.Cell(i, 19).Value = Convert.ToString(item.userRegisterNo);
+                    ws.Cell(i, 20).Value = Convert.ToString(item.username);
+                    ws.Cell(i, 21).Value = Convert.ToString(item.actionReason);
+                    ws.Cell(i, 22).Value = Convert.ToString(item.reasonDetail);
+                    i++;
+                }
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    byte[] content = stream.ToArray();
+                    return content;
+                }
+                return null;
+            }
+
+        }
+
+        /// <summary>
+        /// Upload method for excel file.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         public bool GetDataFromExcelFile(string filename, Stream stream)
         {
             DataSet dsexcelRecords = new DataSet();
@@ -399,6 +734,12 @@ namespace ManualAction.BusinessLayer.Managers
 
             return false;
         }
+
+        /// <summary>
+        /// Assigning the user's name while uploading the excel file. 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public ManualAction.DataAccessLayer.ManualAction AddUserInfo(ManualAction.DataAccessLayer.ManualAction list)
         {
             UserListManager user = new UserListManager();
@@ -409,704 +750,15 @@ namespace ManualAction.BusinessLayer.Managers
             return list;
         }
 
-        public int GetCount(int statusType)
-        {
-            List<ManualAction.DataAccessLayer.ManualAction> managerList = _unitOfWork.ManualActionRepository.GetAll().ToList();
-            if (managerList == null)
-            {
-                return 0;
-            }
-            int managerCount = managerList.Where(x => x.statusType == statusType).Count();
-            return managerCount;
-        }
-        public List<ManualActionDTO> GetManagerByRegNo(string regNo)
-        {
-            List<ManualAction.DataAccessLayer.ManualAction> managerList = _unitOfWork.ManualActionRepository.GetAll().Where(t => t.userRegisterNo == regNo).OrderByDescending(x => x.registerDate).ToList();
-            List<ManualActionDTO> list = new List<ManualActionDTO>();
-            if (managerList == null)
-            {
-                return null;
-            }
-            foreach (ManualAction.DataAccessLayer.ManualAction recordValue in managerList)
-            {
-                ManualActionDTO returnValue = new ManualActionDTO()
-                {
-                    manualActionID = recordValue.manualActionID,
-                    UY = recordValue.UY,
-                    HTU = recordValue.HTU,
-                    material = recordValue.material,
-                    materialText = recordValue.materialText,
-                    MT = recordValue.MT,
-                    amount = recordValue.amount,
-                    brm = recordValue.brm,
-                    priceBrm = recordValue.priceBrm,
-                    total = recordValue.total,
-                    DnmsMF = recordValue.DnmsMF,
-                    DnmsMFValue = recordValue.DnmsMFValue,
-                    orderValue = recordValue.orderValue,
-                    productCode = recordValue.productCode,
-                    productCodeInfo = recordValue.productCodeInfo,
-                    productYear = recordValue.productYear,
-                    registerDate = recordValue.registerDate.ToString().Substring(0, 10),
-                    sortingDate = recordValue.registerDate.Value.Month < 10 ? recordValue.registerDate.Value.Year.ToString() + 0 + recordValue.registerDate.Value.Month.ToString() : recordValue.registerDate.Value.Year.ToString() + recordValue.registerDate.Value.Month.ToString(),
-                    loginDate = recordValue.loginDate.ToString().Substring(0, 10),
-                    loginDateTime = recordValue.loginDateTime.Substring(recordValue.loginDateTime.Length - 8),
-                    userRegisterNo = recordValue.userRegisterNo,
-                    username = recordValue.username,
-                    actionReason = recordValue.actionReason,
-                    reasonDetail = recordValue.reasonDetail,
-                    madeDate = recordValue.madeDate,
-                    madeDateText = recordValue.madeDate.ToString(),
-                    statusType = recordValue.statusType,
-                    statusName = recordValue.statusName,
-                    isRedirected = recordValue.isRedirected,
-                    historyID = recordValue.historyID,
-                    redirectedTeam = recordValue.redirectedTeam,
-                    redirectedUser = recordValue.redirectedUser,
-                    redirectedText = recordValue.redirectedText,
-                    redirectedDate = recordValue.redirectedDate,
-                };
-                list.Add(returnValue);
-
-            }
-
-            return list;
-        }
-        public int GetCountByRegNo(string regNo, int statusType)
-        {
-            List<ManualAction.DataAccessLayer.ManualAction> managerList = _unitOfWork.ManualActionRepository.GetAll().Where(t => t.userRegisterNo == regNo).ToList();
-            if (managerList == null)
-            {
-                return 0;
-            }
-            int managerCount = managerList.Where(x => x.statusType == statusType).Count();
-            return managerCount;
-        }
-
-        public bool RedirectManager(ManualActionDTO manager, int depNo, string username)
-        {
-            if (manager == null || depNo == null || username == null)
-                return false;
-            string depName = "";
-            DepartmantManager dep = new DepartmantManager();
-            DepartmantDTO depValue = dep.GetManagerById(depNo);
-            if (depValue.departmentName == null || depValue.departmentName.Length == 0)
-                depName = "*";
-            depName = depValue.departmentName;
-            ActionHistoryDTO actionHistory = new ActionHistoryDTO();
-            actionHistory.manualActionID = manager.manualActionID.ToString();
-            actionHistory.senderUser = username;
-            actionHistory.senderTeam = depName;
-            actionHistory.receiverTeam = manager.redirectedTeam;
-            actionHistory.receiverUser = manager.redirectedUser;
-            actionHistory.redirectedText = manager.redirectedText;
-            actionHistory.redirectedDate = DateTime.Now.ToString();
-            ActionHistoryManager actionHistoryManager = new ActionHistoryManager();
-            ActionHistoryDTO historyDTO = actionHistoryManager.CreateManager(actionHistory);
-            if (historyDTO == null)
-                return false;
-            manager.statusType = 2;
-            manager.statusName = "Devam Ediyor";
-            manager.isRedirected = true;
-            manager.historyID = historyDTO.historyID.ToString();
-            manager.redirectedTeam = "";
-            manager.redirectedText = "";
-            manager.redirectedUser = "";
-            manager.redirectedDate = DateTime.Now;
-            ManualActionManager manualAction = new ManualActionManager();
-            ManualActionDTO returnValue = manualAction.UpdateManager(manager);
-            if (returnValue == null)
-                return false;
-            return true;
-        }
-
-        public byte[] ExporttoExcel()
-        {
-
-            using (var workbook = new XLWorkbook())
-            {
-                var ws = workbook.Worksheets.Add("WAT-Manuel Hareketler");
-                ws.ColumnWidth = 10;
-
-                //header
-                ws.Cell(1, 1).Value = "ÜY";
-                ws.Cell(1, 2).Value = "HTü";
-                ws.Cell(1, 3).Value = "Malzeme No";
-                ws.Cell(1, 4).Value = "Malzeme Kısa Metni";
-                ws.Cell(1, 5).Value = "MT";
-                ws.Cell(1, 6).Value = "Miktar";
-                ws.Cell(1, 7).Value = "Birim";
-                ws.Cell(1, 8).Value = "Fiyat Birim";
-                ws.Cell(1, 9).Value = "Tutar";
-                ws.Cell(1, 10).Value = "Dnms.MF";
-                ws.Cell(1, 11).Value = "Dnms.MF Değeri";
-                ws.Cell(1, 12).Value = "Sipariş";
-                ws.Cell(1, 13).Value = "Malzeme";
-                ws.Cell(1, 14).Value = "Malzeme Bilgisi";
-                ws.Cell(1, 15).Value = "M.yıl";
-                ws.Cell(1, 16).Value = "Kayıt Tarihi";
-                ws.Cell(1, 17).Value = "Giriş Tarihi";
-                ws.Cell(1, 18).Value = "Saat";
-                ws.Cell(1, 19).Value = "Sorumlu Sicili";
-                ws.Cell(1, 20).Value = "Sorumlu Birey";
-                ws.Cell(1, 21).Value = "Hareket Sebebi";
-                ws.Cell(1, 22).Value = "Açıklama";
-                ws.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 4).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 6).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 7).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 8).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 9).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 10).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 11).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 12).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 15).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 16).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 17).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 18).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 19).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 20).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 21).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 22).Style.Fill.BackgroundColor = XLColor.Almond;
-
-                //connect to sql here
-                System.Data.DataTable dt = new System.Data.DataTable();
-                List<ManualActionDTO> list = GetAllManager();
-                if (list.Count() == 0)
-                    return null;
-                int i = 2;
-                foreach (ManualActionDTO item in list)
-                {
-                    if (item.statusType == 2)
-                    {
-                        ws.Cell(i, 1).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 2).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 3).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 5).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 7).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 8).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 9).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 10).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 12).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 13).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 15).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 16).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                    }
-                    else if (item.statusType == 3)
-                    {
-                        ws.Cell(i, 1).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 2).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 3).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 5).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 7).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 8).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 9).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 10).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 12).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 13).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 15).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 16).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                    }
-                    ws.Cell(i, 1).Value = Convert.ToString(item.UY);
-                    ws.Cell(i, 2).Value = Convert.ToString(item.HTU);
-                    ws.Cell(i, 3).Value = Convert.ToString(item.material).TrimEnd();
-                    ws.Cell(i, 4).Value = Convert.ToString(item.materialText);
-                    ws.Cell(i, 5).Value = Convert.ToString(item.MT);
-                    ws.Cell(i, 6).Value = Convert.ToDecimal(item.amount);
-                    ws.Cell(i, 7).Value = Convert.ToString(item.brm);
-                    ws.Cell(i, 8).Value = Convert.ToString(item.priceBrm);
-                    ws.Cell(i, 9).Value = Convert.ToDecimal(item.total);
-                    ws.Cell(i, 10).Value = Convert.ToDecimal(item.DnmsMF);
-                    ws.Cell(i, 11).Value = Convert.ToDecimal(item.DnmsMFValue);
-                    ws.Cell(i, 12).Value = Convert.ToString(item.orderValue).TrimEnd();
-                    ws.Cell(i, 13).Value = Convert.ToString(item.productCode).TrimEnd();
-                    ws.Cell(i, 14).Value = Convert.ToString(item.productCodeInfo);
-                    ws.Cell(i, 15).Value = Convert.ToString(item.productYear);
-                    ws.Cell(i, 16).Value = Convert.ToString(item.registerDate);
-                    ws.Cell(i, 17).Value = Convert.ToString(item.loginDate);
-                    ws.Cell(i, 18).Value = Convert.ToString(item.loginDateTime);
-                    ws.Cell(i, 19).Value = Convert.ToString(item.userRegisterNo);
-                    ws.Cell(i, 20).Value = Convert.ToString(item.username);
-                    ws.Cell(i, 21).Value = Convert.ToString(item.actionReason);
-                    ws.Cell(i, 22).Value = Convert.ToString(item.reasonDetail);
-                    i++;
-                }
-                using (var stream = new MemoryStream())
-                {
-                    workbook.SaveAs(stream);
-                    byte[] content = stream.ToArray();
-                    return content;
-                }
-                return null;
-            }
-
-        }
-        public byte[] ExporttoExcelByDate(DateTime startDate, DateTime endDate)
-        {
-            using (var workbook = new XLWorkbook())
-            {
-                var ws = workbook.Worksheets.Add("WAT-Manuel Hareketler");
-                ws.ColumnWidth = 10;
-
-                //header
-                ws.Cell(1, 1).Value = "ÜY";
-                ws.Cell(1, 2).Value = "HTü";
-                ws.Cell(1, 3).Value = "Malzeme No";
-                ws.Cell(1, 4).Value = "Malzeme Kısa Metni";
-                ws.Cell(1, 5).Value = "MT";
-                ws.Cell(1, 6).Value = "Miktar";
-                ws.Cell(1, 7).Value = "Birim";
-                ws.Cell(1, 8).Value = "Fiyat Birim";
-                ws.Cell(1, 9).Value = "Tutar";
-                ws.Cell(1, 10).Value = "Dnms.MF";
-                ws.Cell(1, 11).Value = "Dnms.MF Değeri";
-                ws.Cell(1, 12).Value = "Sipariş";
-                ws.Cell(1, 13).Value = "Malzeme";
-                ws.Cell(1, 14).Value = "Malzeme Bilgisi";
-                ws.Cell(1, 15).Value = "M.yıl";
-                ws.Cell(1, 16).Value = "Kayıt Tarihi";
-                ws.Cell(1, 17).Value = "Giriş Tarihi";
-                ws.Cell(1, 18).Value = "Saat";
-                ws.Cell(1, 19).Value = "Sorumlu Sicili";
-                ws.Cell(1, 20).Value = "Sorumlu Birey";
-                ws.Cell(1, 21).Value = "Hareket Sebebi";
-                ws.Cell(1, 22).Value = "Açıklama";
-                ws.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 4).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 6).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 7).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 8).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 9).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 10).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 11).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 12).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 15).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 16).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 17).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 18).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 19).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 20).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 21).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 22).Style.Fill.BackgroundColor = XLColor.Almond;
-
-                //connect to sql here
-                System.Data.DataTable dt = new System.Data.DataTable();
-                List<ManualActionDTO> list = GetAllManager();
-                list = list.Where(x => Convert.ToDateTime(x.registerDate) <= endDate && Convert.ToDateTime(x.registerDate) >= startDate).ToList();
-                if (list.Count() == 0)
-                    return null;
-                int i = 2;
-                foreach (ManualActionDTO item in list)
-                {
-                    if (item.statusType == 2)
-                    {
-                        ws.Cell(i, 1).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 2).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 3).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 5).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 7).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 8).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 9).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 10).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 12).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 13).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 15).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 16).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                    }
-                    else if (item.statusType == 3)
-                    {
-                        ws.Cell(i, 1).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 2).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 3).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 5).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 7).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 8).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 9).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 10).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 12).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 13).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 15).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 16).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                    }
-
-                    ws.Cell(i, 1).Value = Convert.ToString(item.UY);
-                    ws.Cell(i, 2).Value = Convert.ToString(item.HTU);
-                    ws.Cell(i, 3).Value = Convert.ToString(item.material).TrimEnd();
-                    ws.Cell(i, 4).Value = Convert.ToString(item.materialText);
-                    ws.Cell(i, 5).Value = Convert.ToString(item.MT);
-                    ws.Cell(i, 6).Value = Convert.ToDecimal(item.amount);
-                    ws.Cell(i, 7).Value = Convert.ToString(item.brm);
-                    ws.Cell(i, 8).Value = Convert.ToString(item.priceBrm);
-                    ws.Cell(i, 9).Value = Convert.ToDecimal(item.total);
-                    ws.Cell(i, 10).Value = Convert.ToDecimal(item.DnmsMF);
-                    ws.Cell(i, 11).Value = Convert.ToDecimal(item.DnmsMFValue);
-                    ws.Cell(i, 12).Value = Convert.ToString(item.orderValue).TrimEnd();
-                    ws.Cell(i, 13).Value = Convert.ToString(item.productCode).TrimEnd();
-                    ws.Cell(i, 14).Value = Convert.ToString(item.productCodeInfo);
-                    ws.Cell(i, 15).Value = Convert.ToString(item.productYear);
-                    ws.Cell(i, 16).Value = Convert.ToString(item.registerDate);
-                    ws.Cell(i, 17).Value = Convert.ToString(item.loginDate);
-                    ws.Cell(i, 18).Value = Convert.ToString(item.loginDateTime);
-                    ws.Cell(i, 19).Value = Convert.ToString(item.userRegisterNo);
-                    ws.Cell(i, 20).Value = Convert.ToString(item.username);
-                    ws.Cell(i, 21).Value = Convert.ToString(item.actionReason);
-                    ws.Cell(i, 22).Value = Convert.ToString(item.reasonDetail);
-                    i++;
-                }
-                using (var stream = new MemoryStream())
-                {
-                    workbook.SaveAs(stream);
-                    byte[] content = stream.ToArray();
-                    return content;
-                }
-                return null;
-            }
-
-        }
-        public byte[] ExporttoExcelByRegNo(string regNo)
-        {
-
-            using (var workbook = new XLWorkbook())
-            {
-                var ws = workbook.Worksheets.Add("WAT-Manuel Hareketler");
-                ws.ColumnWidth = 10;
-
-                //header
-                ws.Cell(1, 1).Value = "ÜY";
-                ws.Cell(1, 2).Value = "HTü";
-                ws.Cell(1, 3).Value = "Malzeme No";
-                ws.Cell(1, 4).Value = "Malzeme Kısa Metni";
-                ws.Cell(1, 5).Value = "MT";
-                ws.Cell(1, 6).Value = "Miktar";
-                ws.Cell(1, 7).Value = "Birim";
-                ws.Cell(1, 8).Value = "Fiyat Birim";
-                ws.Cell(1, 9).Value = "Tutar";
-                ws.Cell(1, 10).Value = "Dnms.MF";
-                ws.Cell(1, 11).Value = "Dnms.MF Değeri";
-                ws.Cell(1, 12).Value = "Sipariş";
-                ws.Cell(1, 13).Value = "Malzeme";
-                ws.Cell(1, 14).Value = "Malzeme Bilgisi";
-                ws.Cell(1, 15).Value = "M.yıl";
-                ws.Cell(1, 16).Value = "Kayıt Tarihi";
-                ws.Cell(1, 17).Value = "Giriş Tarihi";
-                ws.Cell(1, 18).Value = "Saat";
-                ws.Cell(1, 19).Value = "Sorumlu Sicili";
-                ws.Cell(1, 20).Value = "Sorumlu Birey";
-                ws.Cell(1, 21).Value = "Hareket Sebebi";
-                ws.Cell(1, 22).Value = "Açıklama";
-                ws.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 4).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 6).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 7).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 8).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 9).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 10).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 11).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 12).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 15).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 16).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 17).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 18).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 19).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 20).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 21).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 22).Style.Fill.BackgroundColor = XLColor.Almond;
-
-                //connect to sql here
-                System.Data.DataTable dt = new System.Data.DataTable();
-                List<ManualActionDTO> list = GetManagerByRegNo(regNo).ToList();
-                if (list.Count() == 0)
-                    return null;
-                int i = 2;
-                foreach (ManualActionDTO item in list)
-                {
-                    if (item.statusType == 2)
-                    {
-                        ws.Cell(i, 1).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 2).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 3).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 5).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 7).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 8).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 9).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 10).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 12).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 13).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 15).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 16).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                    }
-                    else if (item.statusType == 3)
-                    {
-                        ws.Cell(i, 1).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 2).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 3).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 5).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 7).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 8).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 9).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 10).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 12).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 13).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 15).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 16).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                    }
-                    ws.Cell(i, 1).Value = Convert.ToString(item.UY);
-                    ws.Cell(i, 2).Value = Convert.ToString(item.HTU);
-                    ws.Cell(i, 3).Value = Convert.ToString(item.material).TrimEnd();
-                    ws.Cell(i, 4).Value = Convert.ToString(item.materialText);
-                    ws.Cell(i, 5).Value = Convert.ToString(item.MT);
-                    ws.Cell(i, 6).Value = Convert.ToDecimal(item.amount);
-                    ws.Cell(i, 7).Value = Convert.ToString(item.brm);
-                    ws.Cell(i, 8).Value = Convert.ToString(item.priceBrm);
-                    ws.Cell(i, 9).Value = Convert.ToDecimal(item.total);
-                    ws.Cell(i, 10).Value = Convert.ToDecimal(item.DnmsMF);
-                    ws.Cell(i, 11).Value = Convert.ToDecimal(item.DnmsMFValue);
-                    ws.Cell(i, 12).Value = Convert.ToString(item.orderValue).TrimEnd();
-                    ws.Cell(i, 13).Value = Convert.ToString(item.productCode).TrimEnd();
-                    ws.Cell(i, 14).Value = Convert.ToString(item.productCodeInfo);
-                    ws.Cell(i, 15).Value = Convert.ToString(item.productYear);
-                    ws.Cell(i, 16).Value = Convert.ToString(item.registerDate);
-                    ws.Cell(i, 17).Value = Convert.ToString(item.loginDate);
-                    ws.Cell(i, 18).Value = Convert.ToString(item.loginDateTime);
-                    ws.Cell(i, 19).Value = Convert.ToString(item.userRegisterNo);
-                    ws.Cell(i, 20).Value = Convert.ToString(item.username);
-                    ws.Cell(i, 21).Value = Convert.ToString(item.actionReason);
-                    ws.Cell(i, 22).Value = Convert.ToString(item.reasonDetail);
-                    i++;
-                }
-                using (var stream = new MemoryStream())
-                {
-                    workbook.SaveAs(stream);
-                    byte[] content = stream.ToArray();
-                    return content;
-                }
-                return null;
-            }
-
-        }
-        public byte[] ExporttoExcelByDateRegNo(DateTime startDate, DateTime endDate, string regNo)
-        {
-            using (var workbook = new XLWorkbook())
-            {
-                var ws = workbook.Worksheets.Add("WAT-Manuel Hareketler");
-                ws.ColumnWidth = 10;
-
-                //header
-                ws.Cell(1, 1).Value = "ÜY";
-                ws.Cell(1, 2).Value = "HTü";
-                ws.Cell(1, 3).Value = "Malzeme No";
-                ws.Cell(1, 4).Value = "Malzeme Kısa Metni";
-                ws.Cell(1, 5).Value = "MT";
-                ws.Cell(1, 6).Value = "Miktar";
-                ws.Cell(1, 7).Value = "Birim";
-                ws.Cell(1, 8).Value = "Fiyat Birim";
-                ws.Cell(1, 9).Value = "Tutar";
-                ws.Cell(1, 10).Value = "Dnms.MF";
-                ws.Cell(1, 11).Value = "Dnms.MF Değeri";
-                ws.Cell(1, 12).Value = "Sipariş";
-                ws.Cell(1, 13).Value = "Malzeme";
-                ws.Cell(1, 14).Value = "Malzeme Bilgisi";
-                ws.Cell(1, 15).Value = "M.yıl";
-                ws.Cell(1, 16).Value = "Kayıt Tarihi";
-                ws.Cell(1, 17).Value = "Giriş Tarihi";
-                ws.Cell(1, 18).Value = "Saat";
-                ws.Cell(1, 19).Value = "Sorumlu Sicili";
-                ws.Cell(1, 20).Value = "Sorumlu Birey";
-                ws.Cell(1, 21).Value = "Hareket Sebebi";
-                ws.Cell(1, 22).Value = "Açıklama";
-                ws.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 4).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 6).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 7).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 8).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 9).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 10).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 11).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 12).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 15).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 16).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 17).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 18).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 19).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 20).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 21).Style.Fill.BackgroundColor = XLColor.Almond;
-                ws.Cell(1, 22).Style.Fill.BackgroundColor = XLColor.Almond;
-
-                //connect to sql here
-                System.Data.DataTable dt = new System.Data.DataTable();
-                List<ManualActionDTO> list = GetManagerByRegNo(regNo);
-                list = list.Where(x => Convert.ToDateTime(x.registerDate) <= endDate && Convert.ToDateTime(x.registerDate) >= startDate).ToList();
-                if (list.Count() == 0)
-                    return null;
-                int i = 2;
-                foreach (ManualActionDTO item in list)
-                {
-                    if (item.statusType == 2)
-                    {
-                        ws.Cell(i, 1).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 2).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 3).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 5).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 7).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 8).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 9).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 10).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 12).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 13).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 15).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 16).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                        ws.Cell(i, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(255,222,117);
-                    }
-                    else if (item.statusType == 3)
-                    {
-                        ws.Cell(i, 1).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 2).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 3).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 5).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 7).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 8).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 9).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 10).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 12).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 13).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 15).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 16).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                        ws.Cell(i, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(160, 213,101);
-                    }
-
-                    ws.Cell(i, 1).Value = Convert.ToString(item.UY);
-                    ws.Cell(i, 2).Value = Convert.ToString(item.HTU);
-                    ws.Cell(i, 3).Value = Convert.ToString(item.material).TrimEnd();
-                    ws.Cell(i, 4).Value = Convert.ToString(item.materialText);
-                    ws.Cell(i, 5).Value = Convert.ToString(item.MT);
-                    ws.Cell(i, 6).Value = Convert.ToDecimal(item.amount);
-                    ws.Cell(i, 7).Value = Convert.ToString(item.brm);
-                    ws.Cell(i, 8).Value = Convert.ToString(item.priceBrm);
-                    ws.Cell(i, 9).Value = Convert.ToDecimal(item.total);
-                    ws.Cell(i, 10).Value = Convert.ToDecimal(item.DnmsMF);
-                    ws.Cell(i, 11).Value = Convert.ToDecimal(item.DnmsMFValue);
-                    ws.Cell(i, 12).Value = Convert.ToString(item.orderValue).TrimEnd();
-                    ws.Cell(i, 13).Value = Convert.ToString(item.productCode).TrimEnd();
-                    ws.Cell(i, 14).Value = Convert.ToString(item.productCodeInfo);
-                    ws.Cell(i, 15).Value = Convert.ToString(item.productYear);
-                    ws.Cell(i, 16).Value = Convert.ToString(item.registerDate);
-                    ws.Cell(i, 17).Value = Convert.ToString(item.loginDate);
-                    ws.Cell(i, 18).Value = Convert.ToString(item.loginDateTime);
-                    ws.Cell(i, 19).Value = Convert.ToString(item.userRegisterNo);
-                    ws.Cell(i, 20).Value = Convert.ToString(item.username);
-                    ws.Cell(i, 21).Value = Convert.ToString(item.actionReason);
-                    ws.Cell(i, 22).Value = Convert.ToString(item.reasonDetail);
-                    i++;
-                }
-                using (var stream = new MemoryStream())
-                {
-                    workbook.SaveAs(stream);
-                    byte[] content = stream.ToArray();
-                    return content;
-                }
-                return null;
-            }
-
-        }
-
+        /// <summary>
+        ///  At first, reporting calculation of all manual movements in the database is made.
+        ///  GETREASON method: total cost calculation for each cause
+        ///  GETYEAR method: It returns which years are registered in the database.
+        ///  GETMONTH method: total cost calculation for each month
+        ///  GETREASONBYMONTH method: Calculated monthly for each reason
+        ///  GETREPORT method: Returns the reporting content resulting from the sum of 4 methods.
+        /// </summary>
+        /// <returns></returns>
         public List<ReportDTO> GetYear()
         {
             List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.productYear }).OrderBy(y => y.Key.productYear).Select(s => new ReportDTO { productYear = s.Key.productYear }).ToList();
@@ -1116,14 +768,14 @@ namespace ManualAction.BusinessLayer.Managers
         }
         public List<ReportDTO> GetReason()
         {
-            List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.actionReason }).OrderBy(y => y.Key.actionReason).Select(s => new ReportDTO { actionReason = s.Key.actionReason, sumAmount = s.Sum(i => (i.DnmsMFValue)) }).ToList();
+            List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.actionReason }).OrderBy(y => y.Key.actionReason).Select(s => new ReportDTO { actionReason = s.Key.actionReason, sumAmount = s.Sum(i => (i.DnmsMFValue)), sumAmountInverse = s.Sum(i => (i.DnmsMFValue)) * -1 }).ToList();
             if (list == null)
                 return null;
             return list;
         }
         public List<ReportDTO> GetMonth()
         {
-            List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.sortingDate }).OrderBy(y => y.Key.sortingDate).Select(s => new ReportDTO { sortingDate = s.Key.sortingDate, sumAmount = s.Sum(i => (i.DnmsMFValue)) }).ToList();
+            List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.sortingDate }).OrderBy(y => y.Key.sortingDate).Select(s => new ReportDTO { sortingDate = s.Key.sortingDate, sumAmount = s.Sum(i => (i.DnmsMFValue)), sumAmountInverse = s.Sum(i => (i.DnmsMFValue)) * -1 }).ToList();
             if (list == null)
                 return null;
             return list;
@@ -1155,6 +807,7 @@ namespace ManualAction.BusinessLayer.Managers
                     if (value != null && value.Count() != 0)
                     {
                         temp.sumAmount = value.FirstOrDefault().sumAmount;
+                        temp.sumAmountInverse = value.FirstOrDefault().sumAmount * -1;
                         temp.sortingDate = value.FirstOrDefault().sortingDate;
                     }
                     b.Add(temp);
@@ -1172,17 +825,21 @@ namespace ManualAction.BusinessLayer.Managers
             return report;
         }
 
-
+        /// <summary>
+        ///  By month and year sorting date, reporting calculation of all manual movements in the database is made.
+        /// </summary>
+        /// <param name="sortDate"></param>
+        /// <returns></returns>
         public List<ReportDTO> GetReasonByDate(string sortDate)
         {
-            List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.actionReason, t.sortingDate }).Where(t => t.Key.sortingDate == sortDate).OrderBy(y => y.Key.actionReason).Select(s => new ReportDTO { actionReason = s.Key.actionReason, sumAmount = s.Sum(i => (i.DnmsMFValue)) }).ToList();
+            List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.actionReason, t.sortingDate }).Where(t => t.Key.sortingDate == sortDate).OrderBy(y => y.Key.actionReason).Select(s => new ReportDTO { actionReason = s.Key.actionReason, sumAmount = s.Sum(i => (i.DnmsMFValue)), sumAmountInverse = s.Sum(i => (i.DnmsMFValue)) * -1 }).ToList();
             if (list == null)
                 return null;
             return list;
         }
         public List<ReportDTO> GetMonthByDate(string sortDate)
         {
-            List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.sortingDate }).OrderBy(y => y.Key.sortingDate).Select(s => new ReportDTO { sortingDate = s.Key.sortingDate, sumAmount = s.Sum(i => (i.DnmsMFValue)) }).ToList();
+            List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.sortingDate }).OrderBy(y => y.Key.sortingDate).Select(s => new ReportDTO { sortingDate = s.Key.sortingDate, sumAmount = s.Sum(i => (i.DnmsMFValue)), sumAmountInverse = s.Sum(i => (i.DnmsMFValue)) * -1 }).ToList();
             if (list == null)
                 return null;
             return list.Where(t => t.sortingDate == sortDate).ToList();
@@ -1199,6 +856,13 @@ namespace ManualAction.BusinessLayer.Managers
         {
             List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.actionReason, t.sortingDate }).Where(j => j.Key.sortingDate.Substring(0, 4)
             == sortDate).OrderBy(y => y.Key.sortingDate).Select(s => new ReportDTO { actionReason = s.Key.actionReason, sortingDate = s.Key.sortingDate, sumAmount = s.Sum(i => (i.DnmsMFValue)) }).ToList();
+            if (list == null)
+                return null;
+            return list;
+        }
+        public List<ReportDTO> GetMonthByYear(string year)
+        {
+            List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.sortingDate }).Where(j => j.Key.sortingDate.Substring(0, 4) == year).OrderBy(y => y.Key.sortingDate).Select(s => new ReportDTO { sortingDate = s.Key.sortingDate, sumAmount = s.Sum(i => (i.DnmsMFValue)), sumAmountInverse = s.Sum(i => (i.DnmsMFValue)) * -1 }).ToList();
             if (list == null)
                 return null;
             return list;
@@ -1244,6 +908,7 @@ namespace ManualAction.BusinessLayer.Managers
                     if (value != null && value.Count() != 0)
                     {
                         temp.sumAmount = value.FirstOrDefault().sumAmount;
+                        temp.sumAmountInverse = value.FirstOrDefault().sumAmount * -1;
                         temp.sortingDate = value.FirstOrDefault().sortingDate;
                     }
                     b.Add(temp);
@@ -1257,26 +922,5 @@ namespace ManualAction.BusinessLayer.Managers
             return report;
         }
 
-        public List<ReportDTO> GetReasonByYear(string year)
-        {
-            List<ReportDTO> list = GetAllManager().Where(t => t.productYear == year).GroupBy(t => new { t.actionReason }).OrderBy(y => y.Key.actionReason).Select(s => new ReportDTO { actionReason = s.Key.actionReason, sumAmount = s.Sum(i => (i.DnmsMFValue)) }).ToList();
-            if (list == null)
-                return null;
-            return list;
-        }
-        public List<ReportDTO> GetMonthByYear(string year)
-        {
-            List<ReportDTO> list = GetAllManager().GroupBy(t => new { t.sortingDate }).Where(j => j.Key.sortingDate.Substring(0, 4) == year).OrderBy(y => y.Key.sortingDate).Select(s => new ReportDTO { sortingDate = s.Key.sortingDate, sumAmount = s.Sum(i => (i.DnmsMFValue)) }).ToList();
-            if (list == null)
-                return null;
-            return list;
-        }
-        public List<ReportDTO> GetReasonByMonthByYear(string year)
-        {
-            List<ReportDTO> list = GetAllManager().Where(t => t.productYear == year).GroupBy(t => new { t.actionReason, t.sortingDate }).OrderBy(y => y.Key.sortingDate).Select(s => new ReportDTO { actionReason = s.Key.actionReason, sortingDate = s.Key.sortingDate, sumAmount = s.Sum(i => (i.DnmsMFValue)) }).ToList();
-            if (list == null)
-                return null;
-            return list;
-        }
     }
 }

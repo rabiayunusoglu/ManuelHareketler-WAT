@@ -154,7 +154,7 @@ warning 6002: The table/view 'ManualActionsDB.dbo.UserList' does not have a prim
           <EntitySet Name="Department" EntityType="Self.Department" />
           <EntitySet Name="Status" EntityType="ManualActionsDBModel.Status" />
           <EntitySet Name="UserList" EntityType="ManualActionsDBModel.UserList" />
-          <EntitySet Name="ManualAction" EntityType="ManualActionsDBModel.ManualAction" />
+          <EntitySet Name="ManualActions" EntityType="ManualActionsDBModel.ManualAction" />
         </EntityContainer>
         <EntityType Name="Status">
           <Key>
@@ -269,7 +269,7 @@ warning 6002: The table/view 'ManualActionsDB.dbo.UserList' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ManualAction">
+          <EntitySetMapping Name="ManualActions">
             <EntityTypeMapping TypeName="ManualActionsDBModel.ManualAction">
               <MappingFragment StoreEntitySet="ManualAction">
                 <ScalarProperty Name="redirectedDate" ColumnName="redirectedDate" />
@@ -321,7 +321,7 @@ warning 6002: The table/view 'ManualActionsDB.dbo.UserList' does not have a prim
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

@@ -48,7 +48,7 @@
                         <div class="tab-content" id="custom-tabs-one-tabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1l">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <div class="float-left">
                                             <div class="input-group">
                                                 <label class="input">
@@ -62,7 +62,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
+
+                                    </div>
+                                    <div class="col-lg-5">
                                         <div class="float-right" style="padding-top:20px;">
                                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
 
@@ -78,8 +81,8 @@
                                                 <label class="btn btn-outline-secondary " ng-click="ExportByDate()">
                                                     <input type="radio" name="options" id="option_a2"> Excel Aktar
                                                 </label>
-                                                <label class="btn btn-outline-success " ng-click="toogleForFinishButton=!toogleForFinishButton">
-                                                    <input type="radio" name="options" id="option_a2"> 
+                                                <label class="btn btn-outline-danger " ng-click="ToggleFinishButton()">
+                                                    <input type="radio" name="options" id="option_a2">
                                                     <span ng-bind="toogleForFinishButton ? 'Tamamlananları Gösterme' : 'Tamamlananları Göster'"></span>
                                                 </label>
                                             </div>
